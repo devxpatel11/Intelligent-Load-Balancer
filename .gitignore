@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments and local tools
+.venv/
+venv/
+.tmp/
+.tmp_pdf_extract/
+.mypy_cache/
+.ruff_cache/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Local runtime output; benchmark evidence under results/ and screenshots/ is intentionally tracked.
+*.log

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "metrics_epoch": 0,
+  "config_revision": 0,
+  "algorithm": "rr",
+  "inflight": 0,
+  "totals": {
+    "received": 0,
+    "succeeded": 0,
+    "failed": 0,
+    "rejected": 0,
+    "protocol_errors": 0
+  },
+  "successful_proxy_latency_ms": {
+    "count": 0,
+    "mean": null,
+    "p50": null,
+    "p95": null
+  },
+  "backends": [
+    {
+      "id": "s1",
+      "host": "127.0.0.1",
+      "port": 9101,
+      "weight": 1,
+      "health": "unknown",
+      "active": 0,
+      "assignments": 0,
+      "successes": 0,
+      "failures": 0,
+      "consecutive_probe_successes": 0,
+      "consecutive_probe_failures": 0,
+      "last_transition_at": null
+    },
+    {
+      "id": "s2",
+      "host": "127.0.0.1",
+      "port": 9102,
+      "weight": 1,
+      "health": "unknown",
+      "active": 0,
+      "assignments": 0,
+      "successes": 0,
+      "failures": 0,
+      "consecutive_probe_successes": 0,
+      "consecutive_probe_failures": 0,
+      "last_transition_at": null
+    },
+    {
+      "id": "s3",
+      "host": "127.0.0.1",
+      "port": 9103,
+      "weight": 1,
+      "health": "unknown",
+      "active": 0,
+      "assignments": 0,
+      "successes": 0,
+      "failures": 0,
+      "consecutive_probe_successes": 0,
+      "consecutive_probe_failures": 0,
+      "last_transition_at": null
+    }
+  ],
+  "events": []
+}
