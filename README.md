@@ -4,9 +4,9 @@ Educational application-aware TCP load balancer with simulated backend workloads
 
 ## Project status
 
-**Current verified milestone: C0 foundation.** The repository structure, frozen protocol/configuration/metrics contracts, dependency locks, ownership rules, merge workflow, default configuration, and metrics fixture are present. The package installs and imports successfully on Python 3.12.
+**Current verified milestone: A2 core proxy/service.** C0, A1, and A2 are implemented. The package now provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, FastAPI lifecycle, and read-only metrics/config/health endpoints.
 
-No routing, proxy, backend, workload, dashboard, health-check, benchmark, or experiment behavior is implemented yet. Those features belong to the A1-A6 and B1-B6 task branches described in [AGENTS.md](AGENTS.md).
+The complete automated suite currently has 32 passing tests, including real loopback socket round trips, a 30-request/three-backend RR run, overload/no-healthy/refusal/timeout/protocol-error paths, accounting checks, fixture compatibility, and service lifecycle/API coverage. B1 backends, B2 workload/dashboard, and A3 automated health/control/reliability behavior remain pending.
 
 ## Team and ownership
 
@@ -72,6 +72,17 @@ The dashboard will display application request flow, not captured IP packets. Ap
 All implementation work starts from current `main`, uses one task branch and one worktree, and enters `main` through a reviewed pull request. Member A is the only direct editor of `README.md`; Member B records README input in `docs/readme-notes/Bn.md`. Provider changes merge before consumer changes, and the consumer updates from `main` and reruns its checks before merge.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for exact commands and [repository settings](docs/repository-settings.md) for the intended branch-protection rules.
+The task order is summarized in [the dependency table](docs/task-dependencies.md).
+
+## Current test commands
+
+```text
+python -m pytest tests/unit -q
+python -m pytest tests/integration -q
+python scripts/verify.py
+```
+
+On Windows/Python 3.12.4, A1/A2 verification completed with 24 unit tests and 8 real-socket/service integration tests passing. A2 integration uses contract-faithful loopback backend stubs because the independently runnable B1 backend is intentionally not implemented by Member A.
 
 ## Repository map
 
@@ -82,7 +93,7 @@ docs/readme-notes/       Per-task handoff notes; A integrates README
 results/                 Generated benchmark evidence (not fabricated)
 screenshots/             Repository-relative demonstration evidence
 scripts/verify.py        Foundation/configuration verifier
-src/netbalance/          Installable Python package; implementation pending
+src/netbalance/          Protocol, selectors, registry, metrics, proxy, service
 tests/fixtures/          Frozen API fixture
 tests/unit/              Mathematical/parsing tests added by tasks
 tests/integration/       Real loopback socket/process tests added by tasks
@@ -91,9 +102,10 @@ web/                     Offline dashboard assets added by Member B
 
 ## Next handoff
 
-After both members review and merge C0:
+The next independent tasks are:
 
-- A1 implements protocol helpers, selectors, and the registry with unit tests.
-- B1 implements the independently runnable backend against the frozen protocol and direct socket tests.
+- B1: implement the runnable backend using A1 protocol helpers.
+- B2: implement the workload generator and minimal dashboard after B1, integrating with A2's API.
+- A3: add automated health probing, control/reset endpoints, and expanded cleanup/deadline behavior after B1.
 
 Do not claim later gates, test passes, benchmark results, or screenshots until their artifacts exist in the repository.
