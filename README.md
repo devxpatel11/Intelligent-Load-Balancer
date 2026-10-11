@@ -6,7 +6,7 @@ Educational application-aware TCP load balancer with simulated backend workloads
 
 **Current verified milestone: A3 health, controls, and cleanup.** C0, A1-A3, and B1-B2 are implemented. The package provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, automatic backend health probing, FastAPI lifecycle and controls, runnable backends, a workload client, and an offline dashboard.
 
-The automated suite covers real loopback sockets and subprocesses, health outage/recovery, control validation, busy reset, exclusive port ownership and prompt cleanup, workload bounds and response validation, safe dashboard rendering, proxy failure paths, accounting, and API lifecycle behavior.
+The 72-test automated suite covers real loopback sockets and subprocesses, health outage/recovery, control validation, busy reset, exclusive port ownership and prompt cleanup, workload bounds and response validation, safe dashboard rendering, proxy failure paths, accounting, and API lifecycle behavior.
 
 ## Team and ownership
 
@@ -82,7 +82,7 @@ python -m pytest tests/integration -q
 python scripts/verify.py
 ```
 
-On Windows/Python 3.12, the live G2 path used the three reviewed B1 backends, automatic A3 health recovery, and the B2 workload client for 30 successful requests at concurrency 6; CSV and API totals reconciled, RR assigned 10/10/10, and cleanup returned all active counts to zero. This is integration evidence, not benchmark evidence.
+On Windows/Python 3.12, the post-B1/B2 A3 merge gate passed 72 automated tests. Its live path used the three reviewed B1 backends, automatic A3 health recovery, and the B2 workload client for 30 successful requests at concurrency 6; CSV and API totals reconciled, RR assigned 10/10/10, and cleanup returned all active counts to zero. This is integration evidence, not benchmark evidence.
 
 ## Repository map
 
