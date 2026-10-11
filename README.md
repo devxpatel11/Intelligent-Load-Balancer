@@ -4,9 +4,9 @@ Educational application-aware TCP load balancer with simulated backend workloads
 
 ## Project status
 
-**Current verified milestone: A2 core proxy/service.** C0, A1, and A2 are implemented. The package now provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, FastAPI lifecycle, and read-only metrics/config/health endpoints.
+**Current verified milestone: A2 + B2.** C0, A1-A2, and B1-B2 are implemented. The package provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, FastAPI lifecycle, runnable bounded backends, a workload client, and local dashboard assets.
 
-The complete automated suite currently has 32 passing tests, including real loopback socket round trips, a 30-request/three-backend RR run, overload/no-healthy/refusal/timeout/protocol-error paths, accounting checks, fixture compatibility, and service lifecycle/API coverage. B1 backends, B2 workload/dashboard, and A3 automated health/control/reliability behavior remain pending.
+The complete automated suite has 70 passing tests. Coverage includes real loopback sockets and subprocesses, backend capacity and health bypass, exclusive port ownership and prompt cleanup, workload bounds and response validation, safe dashboard rendering, a 30-request/three-backend RR run, proxy failure paths, accounting, and API lifecycle behavior. A3 automated health/control behavior remains pending on `main`.
 
 ## Team and ownership
 
@@ -82,7 +82,7 @@ python -m pytest tests/integration -q
 python scripts/verify.py
 ```
 
-On Windows/Python 3.12.4, A1/A2 verification completed with 24 unit tests and 8 real-socket/service integration tests passing. A2 integration uses contract-faithful loopback backend stubs because the independently runnable B1 backend is intentionally not implemented by Member A.
+On Windows/Python 3.12, the reviewed A1-A2/B1-B2 suite completed 70 tests. A cross-branch live gate using reviewed A3 commit `ce2228a` started all three B1 processes and sent 30 B2 requests at concurrency 6: 30 succeeded, CSV and API counts reconciled, RR assigned 10/10/10, and all active counts returned to zero. This is integration evidence, not benchmark evidence; `main` still needs A3 before that path starts automatically.
 
 ## Repository map
 
@@ -102,10 +102,6 @@ web/                     Offline dashboard assets added by Member B
 
 ## Next handoff
 
-The next independent tasks are:
-
-- B1: implement the runnable backend using A1 protocol helpers.
-- B2: implement the workload generator and minimal dashboard after B1, integrating with A2's API.
-- A3: add automated health probing, control/reset endpoints, and expanded cleanup/deadline behavior after B1.
+The next provider task is A3 automated health probing, controls, and cleanup. After A3 merges, B3 can add same-origin dashboard hosting, live controls, launcher automation, and fault evidence.
 
 Do not claim later gates, test passes, benchmark results, or screenshots until their artifacts exist in the repository.
