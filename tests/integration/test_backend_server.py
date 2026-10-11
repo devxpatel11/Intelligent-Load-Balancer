@@ -247,6 +247,14 @@ async def _run_test_server_shutdown_frees_port_and_sockets() -> None:
     w.close()
     await w.wait_closed()
 
+    # Verify port is free to be rebound immediately with SO_REUSEADDR
+    rebound_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    rebound_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        rebound_sock.bind(("127.0.0.1", port))
+    finally:
+        rebound_sock.close()
+
     # Verify the production server can reuse the port immediately.
     rebound = BackendServer("s2", port=port)
     await rebound.start()
