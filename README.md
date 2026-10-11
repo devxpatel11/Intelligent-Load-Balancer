@@ -4,9 +4,9 @@ Educational application-aware TCP load balancer with simulated backend workloads
 
 ## Project status
 
-**Current verified milestone: A2 core proxy/service.** C0, A1, and A2 are implemented. The package now provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, FastAPI lifecycle, and read-only metrics/config/health endpoints.
+**Current verified milestone: A3 health, controls, and cleanup.** C0, A1-A3, and B1-B2 are implemented. The package provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, automatic backend health probing, FastAPI lifecycle and controls, runnable backends, a workload client, and an offline dashboard.
 
-The complete automated suite currently has 32 passing tests, including real loopback socket round trips, a 30-request/three-backend RR run, overload/no-healthy/refusal/timeout/protocol-error paths, accounting checks, fixture compatibility, and service lifecycle/API coverage. B1 backends, B2 workload/dashboard, and A3 automated health/control/reliability behavior remain pending.
+The complete automated suite currently has 70 passing tests, including real loopback socket round trips, health outage/recovery, control validation, busy reset, shutdown cleanup, overload/no-healthy/refusal/timeout/protocol-error paths, accounting checks, workload/dashboard behavior, fixture compatibility, and service lifecycle/API coverage. A live run with the three B1 backend processes and B2 workload client also completed 30/30 requests with RR assignments of 10/10/10.
 
 ## Team and ownership
 
@@ -82,7 +82,7 @@ python -m pytest tests/integration -q
 python scripts/verify.py
 ```
 
-On Windows/Python 3.12.4, A1/A2 verification completed with 24 unit tests and 8 real-socket/service integration tests passing. A2 integration uses contract-faithful loopback backend stubs because the independently runnable B1 backend is intentionally not implemented by Member A.
+On Windows/Python 3.12, A3 verification completed with 70 tests passing. The live G2 path used the three runnable B1 backends, automatic A3 health recovery, and the B2 workload client for 30 successful requests at concurrency 6; RR assigned 10 requests to each backend and cleanup returned all active counts to zero.
 
 ## Repository map
 
@@ -102,10 +102,6 @@ web/                     Offline dashboard assets added by Member B
 
 ## Next handoff
 
-The next independent tasks are:
-
-- B1: implement the runnable backend using A1 protocol helpers.
-- B2: implement the workload generator and minimal dashboard after B1, integrating with A2's API.
-- A3: add automated health probing, control/reset endpoints, and expanded cleanup/deadline behavior after B1.
+The next tasks are B3 live dashboard controls/launcher/fault evidence and A4 expanded integration, fault, and accounting coverage after A3 review and merge.
 
 Do not claim later gates, test passes, benchmark results, or screenshots until their artifacts exist in the repository.

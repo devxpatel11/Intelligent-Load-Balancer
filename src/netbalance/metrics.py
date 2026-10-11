@@ -7,6 +7,10 @@ import math
 import statistics
 from collections import deque
 from datetime import datetime, timezone
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .registry import Registry
 
 
 class Metrics:
@@ -66,14 +70,24 @@ class Metrics:
                 self._rejected += 1
             self._event(request_id, "error", backend_id, "failed", code, latency_ms)
 
-    async def reset(self) -> int:
+    async def health_transition(self, backend_id: str, health: str) -> None:
+        async with self._lock:
+            self._event(None, "health_transition", backend_id, health, None, None)
+
+    async def config_change(self) -> None:
+        async with self._lock:
+            self._event(None, "config_change", None, "updated", None, None)
+
+    async def reset(self, registry: Registry) -> int:
         async with self._lock:
             if self._inflight:
                 raise RuntimeError("cannot reset while work is active")
+            await registry.reset_statistics()
             self._metrics_epoch += 1
             self._received = self._succeeded = self._failed = self._rejected = self._protocol_errors = 0
             self._successful_latency_ms.clear()
             self._events.clear()
+            self._event(None, "reset", None, "succeeded", None, None)
             return self._metrics_epoch
 
     async def snapshot(self, registry: dict[str, object]) -> dict[str, object]:

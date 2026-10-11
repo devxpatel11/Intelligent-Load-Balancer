@@ -125,30 +125,28 @@ class Registry:
             self._selector.reset()
             return True
 
-    async def set_algorithm(self, algorithm: str) -> None:
+    async def set_algorithm(self, algorithm: str) -> int:
         if algorithm not in {"rr", "lc", "swrr"}:
             raise ValueError("algorithm must be rr, lc, or swrr")
         async with self._lock:
-            if self._algorithm != algorithm:
-                self._algorithm = cast(Policy, algorithm)
-                self._selector.reset()
-                self._config_revision += 1
+            self._algorithm = cast(Policy, algorithm)
+            self._selector.reset()
+            self._config_revision += 1
+            return self._config_revision
 
-    async def set_weights(self, weights: dict[str, int]) -> None:
+    async def set_weights(self, weights: dict[str, int]) -> int:
         if set(weights) != set(self._backends):
             raise ValueError("weights must contain every configured backend ID")
         if any(isinstance(weight, bool) or not isinstance(weight, int) or not 1 <= weight <= 100 for weight in weights.values()):
             raise ValueError("weights must be integers from 1 through 100")
         async with self._lock:
-            changed = False
             for backend_id, weight in weights.items():
                 backend = self._backends[backend_id]
                 if backend.config.weight != weight:
                     backend.config = BackendConfig(backend.config.id, backend.config.host, backend.config.port, weight)
-                    changed = True
-            if changed:
-                self._selector.reset()
-                self._config_revision += 1
+            self._selector.reset()
+            self._config_revision += 1
+            return self._config_revision
 
     async def reset_statistics(self) -> None:
         async with self._lock:
