@@ -19,6 +19,60 @@
   </header>
 
   <main class="dashboard-grid">
+    <!-- Notification / Flash Box -->
+    <div id="control-notification" class="notification-box" style="display: none;" role="alert"></div>
+
+    <!-- Live Controls Panel -->
+    <section class="card controls-card full-width">
+      <h2>Load Balancer Controls</h2>
+      <div class="controls-grid">
+        <!-- Algorithm / Policy Form -->
+        <form id="form-algorithm" class="control-form">
+          <div class="form-group">
+            <label for="select-algorithm">Routing Policy</label>
+            <select id="select-algorithm" name="algorithm">
+              <option value="rr">Round Robin (rr)</option>
+              <option value="lc">Least Connections (lc)</option>
+              <option value="swrr">Smooth Weighted Round Robin (swrr)</option>
+            </select>
+          </div>
+          <button type="submit" id="btn-algorithm" class="btn btn-primary">Apply Policy</button>
+        </form>
+
+        <!-- Weights Form -->
+        <form id="form-weights" class="control-form">
+          <div class="form-group weights-group">
+            <label>Backend Weights (1 - 100)</label>
+            <div id="weights-inputs-container" class="weights-inputs">
+              <!-- Dynamically populated or default backend inputs -->
+              <div class="weight-input-item">
+                <label for="weight-s1">s1:</label>
+                <input type="number" id="weight-s1" name="s1" min="1" max="100" value="1" required>
+              </div>
+              <div class="weight-input-item">
+                <label for="weight-s2">s2:</label>
+                <input type="number" id="weight-s2" name="s2" min="1" max="100" value="1" required>
+              </div>
+              <div class="weight-input-item">
+                <label for="weight-s3">s3:</label>
+                <input type="number" id="weight-s3" name="s3" min="1" max="100" value="1" required>
+              </div>
+            </div>
+          </div>
+          <button type="submit" id="btn-weights" class="btn btn-primary">Apply Weights</button>
+        </form>
+
+        <!-- Metrics Reset Form -->
+        <form id="form-reset" class="control-form">
+          <div class="form-group">
+            <label>Reset Telemetry</label>
+            <p class="form-hint">Zeroes counters &amp; latency. Allowed only when in-flight work is 0.</p>
+          </div>
+          <button type="submit" id="btn-reset" class="btn btn-danger">Reset Metrics</button>
+        </form>
+      </div>
+    </section>
+
     <!-- System Overview Cards -->
     <section class="card overview-card">
       <h2>System Status</h2>
@@ -72,6 +126,7 @@
     <!-- Latency Stats -->
     <section class="card latency-card">
       <h2>Successful Proxy Latency (ms)</h2>
+      <div class="latency-disclaimer">Measured downstream by proxy (excludes client connect/queue delays)</div>
       <div class="stats-grid">
         <div class="stat-item">
           <div class="stat-label">Samples</div>
@@ -121,6 +176,7 @@
     <!-- Recent Event Stream -->
     <section class="card events-card full-width">
       <h2>Recent Events Flow</h2>
+      <div class="events-disclaimer">Application-level state transitions and request outcomes (bounded to 20 recent events, not raw packet capture).</div>
       <div class="table-container">
         <table class="data-table" id="events-table">
           <thead>

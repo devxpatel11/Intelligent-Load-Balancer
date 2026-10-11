@@ -2,6 +2,27 @@
 
 const POLL_INTERVAL_MS = 1000;
 const API_URL = "/api/metrics";
+const ALGORITHM_URL = "/api/algorithm";
+const WEIGHTS_URL = "/api/weights";
+const RESET_URL = "/api/reset";
+
+let isFetching = false;
+let notificationTimeout = null;
+
+function showNotification(message, isSuccess = true) {
+  const box = document.getElementById("control-notification");
+  if (!box) return;
+  if (notificationTimeout) {
+    clearTimeout(notificationTimeout);
+    notificationTimeout = null;
+  }
+  box.textContent = message;
+  box.className = isSuccess ? "notification-box notification-success" : "notification-box notification-error";
+  box.style.display = "block";
+  notificationTimeout = setTimeout(() => {
+    box.style.display = "none";
+  }, 5000);
+}
 
 function updateElementText(id, text) {
   const el = document.getElementById(id);
@@ -22,6 +43,25 @@ function createHealthBadge(health) {
   span.className = `health-pill ${cls}`;
   span.textContent = h;
   return span;
+}
+
+function syncControlInputs(data) {
+  // Sync algorithm select if user hasn't focused it
+  const selectAlgo = document.getElementById("select-algorithm");
+  if (selectAlgo && document.activeElement !== selectAlgo && data.algorithm) {
+    selectAlgo.value = String(data.algorithm).toLowerCase();
+  }
+
+  // Sync weight inputs if container exists and user hasn't focused them
+  if (data.backends && Array.isArray(data.backends)) {
+    data.backends.forEach(b => {
+      if (!b.id) return;
+      const input = document.getElementById(`weight-${b.id}`);
+      if (input && document.activeElement !== input && b.weight !== undefined) {
+        input.value = String(b.weight);
+      }
+    });
+  }
 }
 
 function renderBackends(backends) {
@@ -212,6 +252,9 @@ function renderDashboard(data, isFixture = false) {
   renderBackends(data.backends || []);
   renderEvents(data.events || []);
 
+  // Sync inputs with live config
+  syncControlInputs(data);
+
   const lastUpdate = document.getElementById("last-update");
   if (lastUpdate) {
     lastUpdate.textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
@@ -227,6 +270,8 @@ function renderDisconnected(errorMessage = "Disconnected / Error") {
 }
 
 async function fetchMetrics() {
+  if (isFetching) return;
+  isFetching = true;
   try {
     const res = await fetch(API_URL, { cache: "no-store" });
     if (!res.ok) {
@@ -236,11 +281,153 @@ async function fetchMetrics() {
     renderDashboard(data, false);
   } catch (err) {
     renderDisconnected(err.message || "Fetch Failed");
+  } finally {
+    isFetching = false;
   }
 }
 
-// Initial fetch and interval
+async function handleAlgorithmSubmit(e) {
+  e.preventDefault();
+  const select = document.getElementById("select-algorithm");
+  const btn = document.getElementById("btn-algorithm");
+  if (!select || !btn) return;
+
+  const algorithm = select.value;
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(ALGORITHM_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ algorithm }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      showNotification(`Policy successfully changed to ${data.algorithm} (rev ${data.config_revision})`, true);
+      await fetchMetrics();
+    } else {
+      let detail = `HTTP ${res.status}`;
+      try {
+        const errJson = await res.json();
+        if (errJson.detail) detail += `: ${JSON.stringify(errJson.detail)}`;
+      } catch (_) {}
+      showNotification(`Failed to change policy: ${detail}`, false);
+      await fetchMetrics();
+    }
+  } catch (err) {
+    showNotification(`Network error changing policy: ${err.message || "API Unavailable"}`, false);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function handleWeightsSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btn-weights");
+  const inputs = document.querySelectorAll("#weights-inputs-container input[type='number']");
+  if (!btn) return;
+
+  const weights = {};
+  let valid = true;
+
+  inputs.forEach(input => {
+    const backendId = input.name;
+    const val = parseInt(input.value, 10);
+    if (isNaN(val) || val < 1 || val > 100) {
+      valid = false;
+    } else {
+      weights[backendId] = val;
+    }
+  });
+
+  if (!valid || Object.keys(weights).length === 0) {
+    showNotification("Weights must be integers between 1 and 100 for all backends.", false);
+    return;
+  }
+
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(WEIGHTS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ weights }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      showNotification(`Weights updated successfully (rev ${data.config_revision})`, true);
+      await fetchMetrics();
+    } else {
+      let detail = `HTTP ${res.status}`;
+      try {
+        const errJson = await res.json();
+        if (errJson.detail) detail += `: ${JSON.stringify(errJson.detail)}`;
+      } catch (_) {}
+      showNotification(`Failed to update weights: ${detail}`, false);
+      await fetchMetrics();
+    }
+  } catch (err) {
+    showNotification(`Network error updating weights: ${err.message || "API Unavailable"}`, false);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function handleResetSubmit(e) {
+  e.preventDefault();
+  const btn = document.getElementById("btn-reset");
+  if (!btn) return;
+
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(RESET_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      showNotification(`Telemetry reset successfully (epoch ${data.metrics_epoch})`, true);
+      await fetchMetrics();
+    } else if (res.status === 409) {
+      let detail = "Reset rejected: active work in progress (HTTP 409 Busy)";
+      try {
+        const errJson = await res.json();
+        if (errJson.detail) detail = `Reset rejected: ${errJson.detail} (HTTP 409)`;
+      } catch (_) {}
+      showNotification(detail, false);
+      await fetchMetrics();
+    } else {
+      let detail = `HTTP ${res.status}`;
+      try {
+        const errJson = await res.json();
+        if (errJson.detail) detail += `: ${JSON.stringify(errJson.detail)}`;
+      } catch (_) {}
+      showNotification(`Failed to reset metrics: ${detail}`, false);
+      await fetchMetrics();
+    }
+  } catch (err) {
+    showNotification(`Network error resetting metrics: ${err.message || "API Unavailable"}`, false);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// Initial fetch and setup
 document.addEventListener("DOMContentLoaded", () => {
+  const formAlgo = document.getElementById("form-algorithm");
+  if (formAlgo) formAlgo.addEventListener("submit", handleAlgorithmSubmit);
+
+  const formWeights = document.getElementById("form-weights");
+  if (formWeights) formWeights.addEventListener("submit", handleWeightsSubmit);
+
+  const formReset = document.getElementById("form-reset");
+  if (formReset) formReset.addEventListener("submit", handleResetSubmit);
+
   fetchMetrics();
   setInterval(fetchMetrics, POLL_INTERVAL_MS);
 });

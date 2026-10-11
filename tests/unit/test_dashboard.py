@@ -61,3 +61,26 @@ def test_app_js_uses_safe_dom_methods_no_unsafe_innerhtml() -> None:
     assert ".innerHTML" not in js_content, "app.js should not assign innerHTML"
     assert "textContent" in js_content, "app.js must use textContent for safe text rendering"
     assert "createElement" in js_content, "app.js must use createElement for DOM manipulation"
+
+
+def test_dashboard_controls_elements_and_handlers() -> None:
+    html_path = ROOT / "web" / "index.html"
+    html_content = html_path.read_text(encoding="utf-8")
+
+    # Forms and controls present
+    assert 'id="form-algorithm"' in html_content
+    assert 'id="select-algorithm"' in html_content
+    assert 'id="form-weights"' in html_content
+    assert 'id="form-reset"' in html_content
+    assert 'id="control-notification"' in html_content
+
+    js_path = ROOT / "web" / "app.js"
+    js_content = js_path.read_text(encoding="utf-8")
+
+    # API endpoints handled
+    assert "/api/algorithm" in js_content
+    assert "/api/weights" in js_content
+    assert "/api/reset" in js_content
+    # Status codes handled
+    assert "409" in js_content
+    assert "isFetching" in js_content, "Must prevent overlapping fetches"
