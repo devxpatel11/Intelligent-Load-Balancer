@@ -243,9 +243,11 @@ async def _run_test_server_shutdown_frees_port_and_sockets() -> None:
     assert server._server is None
     assert len(server._active_tasks) == 0
     w.close()
+    await w.wait_closed()
 
     # Verify port is free to be rebound immediately
     rebound_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    rebound_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     try:
         rebound_sock.bind(("127.0.0.1", port))
     finally:
