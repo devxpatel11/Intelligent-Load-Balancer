@@ -226,3 +226,132 @@ async def test_bounded_concurrency_in_run_workload() -> None:
     finally:
         server.close()
         await server.wait_closed()
+
+
+@pytest.mark.asyncio
+async def test_duration_mode_stops_initiating_and_drains() -> None:
+    request_start_times: list[float] = []
+    lock = asyncio.Lock()
+
+    async def slow_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+        line = await reader.readline()
+        import json
+        req = json.loads(line.decode("utf-8"))
+        await asyncio.sleep(0.05)  # 50ms work
+        writer.write(encode_message({"id": req["id"], "ok": True, "backend_id": "s1", "echo": req["payload"]}))
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+
+    server = await asyncio.start_server(slow_handler, "127.0.0.1", 0)
+    port = server.sockets[0].getsockname()[1]
+    duration_s = 0.20  # 200ms duration
+    try:
+        t_start = asyncio.get_event_loop().time()
+        results, summary = await run_workload(
+            host="127.0.0.1",
+            port=port,
+            duration=duration_s,
+            concurrency=2,
+            seed=42,
+            timeout=2.0,
+        )
+        t_end = asyncio.get_event_loop().time()
+        # All initiated requests must have started_offset_s < duration_s
+        assert len(results) > 0
+        for r in results:
+            assert r.started_offset_s <= duration_s + 0.05  # initiated before or immediately at stop_mono
+            assert r.ok is True
+        # Summary duration reflects total elapsed time including drain
+        assert summary.duration_s >= duration_s
+    finally:
+        server.close()
+        await server.wait_closed()
+
+
+@pytest.mark.asyncio
+async def test_run_workload_parameter_validation() -> None:
+    # Invalid host
+    with pytest.raises(ValueError, match="host"):
+        await run_workload(host="", port=9000, count=1)
+
+    # Invalid port
+    with pytest.raises(ValueError, match="port"):
+        await run_workload(host="127.0.0.1", port=0, count=1)
+    with pytest.raises(ValueError, match="port"):
+        await run_workload(host="127.0.0.1", port=70000, count=1)
+
+    # Invalid count
+    with pytest.raises(ValueError, match="count"):
+        await run_workload(host="127.0.0.1", port=9000, count=0)
+    with pytest.raises(ValueError, match="count"):
+        await run_workload(host="127.0.0.1", port=9000, count=-5)
+
+    # Invalid duration
+    with pytest.raises(ValueError, match="duration"):
+        await run_workload(host="127.0.0.1", port=9000, duration=0.0)
+    with pytest.raises(ValueError, match="duration"):
+        await run_workload(host="127.0.0.1", port=9000, duration=-1.0)
+
+    # Invalid concurrency
+    with pytest.raises(ValueError, match="concurrency"):
+        await run_workload(host="127.0.0.1", port=9000, count=1, concurrency=0)
+
+    # Invalid timeout
+    with pytest.raises(ValueError, match="timeout"):
+        await run_workload(host="127.0.0.1", port=9000, count=1, timeout=0.0)
+
+
+@pytest.mark.asyncio
+async def test_attempt_error_response_validation() -> None:
+    # Case 1: Valid downstream error
+    async def valid_error_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+        await reader.readline()
+        writer.write(encode_message({
+            "id": "req-1",
+            "ok": False,
+            "backend_id": None,
+            "error": {"code": "OVERLOADED", "message": "work limit reached"}
+        }))
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+
+    server1 = await asyncio.start_server(valid_error_handler, "127.0.0.1", 0)
+    port1 = server1.sockets[0].getsockname()[1]
+    try:
+        req = {"id": "req-1", "op": "work", "work_units": 1, "payload": "test"}
+        res1 = await execute_single_attempt(
+            "127.0.0.1", port1, req, timeout_s=1.0, policy="rr", scenario="test", repetition=1, started_offset_s=0.0
+        )
+        assert res1.ok is False
+        assert res1.error_code == "OVERLOADED"
+    finally:
+        server1.close()
+        await server1.wait_closed()
+
+    # Case 2: Malformed error object (missing code or message)
+    async def malformed_error_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+        await reader.readline()
+        writer.write(encode_message({
+            "id": "req-2",
+            "ok": False,
+            "backend_id": None,
+            "error": "just a string, not an object"
+        }))
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+
+    server2 = await asyncio.start_server(malformed_error_handler, "127.0.0.1", 0)
+    port2 = server2.sockets[0].getsockname()[1]
+    try:
+        req = {"id": "req-2", "op": "work", "work_units": 1, "payload": "test"}
+        res2 = await execute_single_attempt(
+            "127.0.0.1", port2, req, timeout_s=1.0, policy="rr", scenario="test", repetition=1, started_offset_s=0.0
+        )
+        assert res2.ok is False
+        assert res2.error_code == "MALFORMED_RESPONSE"
+    finally:
+        server2.close()
+        await server2.wait_closed()

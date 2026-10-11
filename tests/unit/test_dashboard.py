@@ -51,3 +51,13 @@ def test_metrics_fixture_matches_dashboard_schema() -> None:
 
     assert "events" in data
     assert isinstance(data["events"], list)
+
+
+def test_app_js_uses_safe_dom_methods_no_unsafe_innerhtml() -> None:
+    js_path = ROOT / "web" / "app.js"
+    js_content = js_path.read_text(encoding="utf-8")
+
+    # The dashboard must avoid innerHTML string interpolation with untrusted API values
+    assert ".innerHTML" not in js_content, "app.js should not assign innerHTML"
+    assert "textContent" in js_content, "app.js must use textContent for safe text rendering"
+    assert "createElement" in js_content, "app.js must use createElement for DOM manipulation"

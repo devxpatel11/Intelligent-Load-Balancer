@@ -6,7 +6,7 @@ const API_URL = "/api/metrics";
 function updateElementText(id, text) {
   const el = document.getElementById(id);
   if (el) {
-    el.textContent = text !== null && text !== undefined ? text : "--";
+    el.textContent = text !== null && text !== undefined ? String(text) : "--";
   }
 }
 
@@ -15,76 +15,164 @@ function formatLatency(val) {
   return typeof val === "number" ? val.toFixed(2) : String(val);
 }
 
-function renderHealthBadge(health) {
+function createHealthBadge(health) {
   const h = String(health || "unknown").toLowerCase();
+  const span = document.createElement("span");
   const cls = h === "healthy" ? "health-healthy" : h === "unhealthy" ? "health-unhealthy" : "health-unknown";
-  return `<span class="health-pill ${cls}">${h}</span>`;
+  span.className = `health-pill ${cls}`;
+  span.textContent = h;
+  return span;
 }
 
 function renderBackends(backends) {
   const tbody = document.getElementById("backends-tbody");
   if (!tbody) return;
 
+  // Clear existing rows safely
+  tbody.replaceChildren();
+
   if (!backends || backends.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="10" class="empty-state">No backends configured</td></tr>';
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 10;
+    td.className = "empty-state";
+    td.textContent = "No backends configured";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
     return;
   }
 
-  tbody.innerHTML = backends
-    .map(b => {
-      const streaks = `${b.consecutive_probe_successes ?? 0} / ${b.consecutive_probe_failures ?? 0}`;
-      const lastTrans = b.last_transition_at ? new Date(b.last_transition_at).toLocaleTimeString() : "--";
-      return `
-        <tr>
-          <td><strong>${b.id}</strong></td>
-          <td>${b.host}:${b.port}</td>
-          <td>${b.weight}</td>
-          <td>${renderHealthBadge(b.health)}</td>
-          <td>${b.active ?? 0}</td>
-          <td>${b.assignments ?? 0}</td>
-          <td>${b.successes ?? 0}</td>
-          <td>${b.failures ?? 0}</td>
-          <td>${streaks}</td>
-          <td>${lastTrans}</td>
-        </tr>
-      `;
-    })
-    .join("");
+  backends.forEach(b => {
+    const tr = document.createElement("tr");
+
+    // ID
+    const tdId = document.createElement("td");
+    const strongId = document.createElement("strong");
+    strongId.textContent = b.id != null ? String(b.id) : "--";
+    tdId.appendChild(strongId);
+    tr.appendChild(tdId);
+
+    // Endpoint
+    const tdEndpoint = document.createElement("td");
+    tdEndpoint.textContent = `${b.host ?? "--"}:${b.port ?? "--"}`;
+    tr.appendChild(tdEndpoint);
+
+    // Weight
+    const tdWeight = document.createElement("td");
+    tdWeight.textContent = b.weight != null ? String(b.weight) : "--";
+    tr.appendChild(tdWeight);
+
+    // Health
+    const tdHealth = document.createElement("td");
+    tdHealth.appendChild(createHealthBadge(b.health));
+    tr.appendChild(tdHealth);
+
+    // Active
+    const tdActive = document.createElement("td");
+    tdActive.textContent = String(b.active ?? 0);
+    tr.appendChild(tdActive);
+
+    // Assignments
+    const tdAssignments = document.createElement("td");
+    tdAssignments.textContent = String(b.assignments ?? 0);
+    tr.appendChild(tdAssignments);
+
+    // Successes
+    const tdSuccesses = document.createElement("td");
+    tdSuccesses.textContent = String(b.successes ?? 0);
+    tr.appendChild(tdSuccesses);
+
+    // Failures
+    const tdFailures = document.createElement("td");
+    tdFailures.textContent = String(b.failures ?? 0);
+    tr.appendChild(tdFailures);
+
+    // Streaks
+    const tdStreaks = document.createElement("td");
+    tdStreaks.textContent = `${b.consecutive_probe_successes ?? 0} / ${b.consecutive_probe_failures ?? 0}`;
+    tr.appendChild(tdStreaks);
+
+    // Last Transition
+    const tdLastTrans = document.createElement("td");
+    if (b.last_transition_at) {
+      const date = new Date(b.last_transition_at);
+      tdLastTrans.textContent = isNaN(date.getTime()) ? String(b.last_transition_at) : date.toLocaleTimeString();
+    } else {
+      tdLastTrans.textContent = "--";
+    }
+    tr.appendChild(tdLastTrans);
+
+    tbody.appendChild(tr);
+  });
 }
 
 function renderEvents(events) {
   const tbody = document.getElementById("events-tbody");
   if (!tbody) return;
 
+  tbody.replaceChildren();
+
   if (!events || events.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No recent events recorded</td></tr>';
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = 7;
+    td.className = "empty-state";
+    td.textContent = "No recent events recorded";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
     return;
   }
 
   // Display most recent first (up to last 20 in UI table)
   const displayEvents = events.slice(-20).reverse();
 
-  tbody.innerHTML = displayEvents
-    .map(e => {
-      const ts = e.timestamp ? new Date(e.timestamp).toLocaleTimeString() : "--";
-      const reqId = e.request_id || "--";
-      const bId = e.backend_id || "--";
-      const outcome = e.outcome || "--";
-      const errCode = e.error_code || "--";
-      const lat = formatLatency(e.latency_ms);
-      return `
-        <tr>
-          <td>${ts}</td>
-          <td><strong>${e.action || "--"}</strong></td>
-          <td>${reqId}</td>
-          <td>${bId}</td>
-          <td>${outcome}</td>
-          <td>${errCode}</td>
-          <td>${lat}</td>
-        </tr>
-      `;
-    })
-    .join("");
+  displayEvents.forEach(e => {
+    const tr = document.createElement("tr");
+
+    // Timestamp
+    const tdTs = document.createElement("td");
+    if (e.timestamp) {
+      const date = new Date(e.timestamp);
+      tdTs.textContent = isNaN(date.getTime()) ? String(e.timestamp) : date.toLocaleTimeString();
+    } else {
+      tdTs.textContent = "--";
+    }
+    tr.appendChild(tdTs);
+
+    // Action
+    const tdAction = document.createElement("td");
+    const strongAction = document.createElement("strong");
+    strongAction.textContent = e.action != null ? String(e.action) : "--";
+    tdAction.appendChild(strongAction);
+    tr.appendChild(tdAction);
+
+    // Request ID
+    const tdReqId = document.createElement("td");
+    tdReqId.textContent = e.request_id != null ? String(e.request_id) : "--";
+    tr.appendChild(tdReqId);
+
+    // Backend ID
+    const tdBId = document.createElement("td");
+    tdBId.textContent = e.backend_id != null ? String(e.backend_id) : "--";
+    tr.appendChild(tdBId);
+
+    // Outcome
+    const tdOutcome = document.createElement("td");
+    tdOutcome.textContent = e.outcome != null ? String(e.outcome) : "--";
+    tr.appendChild(tdOutcome);
+
+    // Error Code
+    const tdErrCode = document.createElement("td");
+    tdErrCode.textContent = e.error_code != null ? String(e.error_code) : "--";
+    tr.appendChild(tdErrCode);
+
+    // Latency
+    const tdLat = document.createElement("td");
+    tdLat.textContent = formatLatency(e.latency_ms);
+    tr.appendChild(tdLat);
+
+    tbody.appendChild(tr);
+  });
 }
 
 function renderDashboard(data, isFixture = false) {
@@ -100,7 +188,7 @@ function renderDashboard(data, isFixture = false) {
   }
 
   // Overview stats
-  updateElementText("stat-policy", (data.algorithm || "--").toUpperCase());
+  updateElementText("stat-policy", data.algorithm ? String(data.algorithm).toUpperCase() : "--");
   updateElementText("stat-inflight", data.inflight ?? 0);
   updateElementText("stat-epoch", data.metrics_epoch ?? 0);
   updateElementText("stat-revision", data.config_revision ?? 0);

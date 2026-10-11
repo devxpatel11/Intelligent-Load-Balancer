@@ -217,7 +217,13 @@ async def execute_single_attempt(
         else:
             ok = False
             err = response.get("error")
-            if isinstance(err, dict) and "code" in err:
+            if (
+                isinstance(err, dict)
+                and isinstance(err.get("code"), str)
+                and err.get("code")
+                and isinstance(err.get("message"), str)
+                and err.get("message")
+            ):
                 error_code = str(err["code"])
             else:
                 error_code = "MALFORMED_RESPONSE"
@@ -297,12 +303,22 @@ async def run_workload(
     scenario: str = "default",
     repetition: int = 1,
 ) -> tuple[list[AttemptResult], WorkloadSummary]:
+    if not host:
+        raise ValueError("host must be a non-empty string")
+    if isinstance(port, bool) or not isinstance(port, int) or not (1 <= port <= 65535):
+        raise ValueError(f"port must be an integer between 1 and 65535, got {port}")
     if count is None and duration is None:
         raise ValueError("Either count or duration must be specified")
     if count is not None and duration is not None:
         raise ValueError("Cannot specify both count and duration")
-    if concurrency < 1:
-        raise ValueError("concurrency must be at least 1")
+    if count is not None and (isinstance(count, bool) or not isinstance(count, int) or count <= 0):
+        raise ValueError(f"count must be a positive integer, got {count}")
+    if duration is not None and (isinstance(duration, bool) or not isinstance(duration, (int, float)) or duration <= 0):
+        raise ValueError(f"duration must be a positive number, got {duration}")
+    if isinstance(concurrency, bool) or not isinstance(concurrency, int) or concurrency < 1:
+        raise ValueError(f"concurrency must be a positive integer, got {concurrency}")
+    if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or timeout <= 0:
+        raise ValueError(f"timeout must be a positive number, got {timeout}")
 
     rng = random.Random(seed)
 
@@ -412,18 +428,48 @@ async def run_workload(
     return results, summary
 
 
+def _positive_int(val: str) -> int:
+    try:
+        ival = int(val)
+        if ival <= 0:
+            raise ValueError
+        return ival
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"must be a positive integer, got '{val}'")
+
+
+def _positive_float(val: str) -> float:
+    try:
+        fval = float(val)
+        if fval <= 0 or math.isnan(fval) or math.isinf(fval):
+            raise ValueError
+        return fval
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"must be a positive number, got '{val}'")
+
+
+def _valid_port(val: str) -> int:
+    try:
+        ival = int(val)
+        if not (1 <= ival <= 65535):
+            raise ValueError
+        return ival
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"port must be an integer between 1 and 65535, got '{val}'")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="NetBalance Workload Client")
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Target proxy host")
-    parser.add_argument("--port", type=int, default=9000, help="Target proxy port")
+    parser.add_argument("--port", type=_valid_port, default=9000, help="Target proxy port (1-65535)")
 
     mode_group = parser.add_mutually_exclusive_group(required=True)
-    mode_group.add_argument("--count", type=int, help="Number of work requests to send")
-    mode_group.add_argument("--duration", type=float, help="Duration in seconds to run workload")
+    mode_group.add_argument("--count", type=_positive_int, help="Number of work requests to send (> 0)")
+    mode_group.add_argument("--duration", type=_positive_float, help="Duration in seconds to run workload (> 0)")
 
-    parser.add_argument("--concurrency", type=int, default=1, help="Max bounded concurrency")
+    parser.add_argument("--concurrency", type=_positive_int, default=1, help="Max bounded concurrency (> 0)")
     parser.add_argument("--seed", type=int, default=42, help="Seed for RNG reproducibility")
-    parser.add_argument("--timeout", type=float, default=4.0, help="Per-attempt timeout in seconds")
+    parser.add_argument("--timeout", type=_positive_float, default=4.0, help="Per-attempt timeout in seconds (> 0)")
     parser.add_argument("--output", type=str, help="Output CSV path")
     parser.add_argument("--trace", type=str, help="Optional trace file path with pre-generated requests")
 
