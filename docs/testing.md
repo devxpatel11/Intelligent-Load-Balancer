@@ -28,4 +28,4 @@ python -m pytest tests/integration -q
 python scripts/verify.py
 ```
 
-At C0 only `scripts/verify.py` and the package import smoke check are runnable; no feature tests are claimed.
+At A2, 24 unit tests and 8 real-socket/service integration tests pass on Windows with Python 3.12.4. The 30-request test uses three contract-faithful loopback stubs, so it proves the A2 proxy path but does not claim B1 or the combined G2 gate.
