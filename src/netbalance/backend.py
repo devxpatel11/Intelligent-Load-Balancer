@@ -92,11 +92,15 @@ class BackendServer:
 
     async def start(self) -> None:
         """Start listening for incoming TCP connections."""
+        # Enable address reuse so the OS can bind the same port immediately after stop.
+        # Only SO_REUSEADDR is needed; SO_REUSEPORT changes binding semantics and is unnecessary.
+        reuse_addr = True
         self._server = await asyncio.start_server(
             self._handle_client_connection,
             host=self.host,
             port=self.port,
             limit=MAX_FRAME_BYTES,
+            reuse_address=reuse_addr,
         )
         self._serving = True
         logger.info(
