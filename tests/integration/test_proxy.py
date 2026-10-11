@@ -261,3 +261,37 @@ async def test_thirty_requests_cross_proxy_and_three_real_socket_stubs() -> None
         for server in servers:
             server.close()
             await server.wait_closed()
+
+
+@pytest.mark.asyncio
+async def test_shutdown_cancels_inflight_work_and_releases_accounting() -> None:
+    entered = asyncio.Event()
+
+    async def stall(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+        try:
+            await read_message(reader, 1.0)
+            entered.set()
+            await reader.read()
+        finally:
+            writer.close()
+            await writer.wait_closed()
+
+    backend = await asyncio.start_server(stall, "127.0.0.1", 0)
+    proxy, registry, metrics = await running_proxy(backend.sockets[0].getsockname()[1])
+    reader, writer = await asyncio.open_connection(*proxy.address)
+    writer.write(encode_message({"id": "r1", "op": "work", "work_units": 1, "payload": "x"}))
+    await writer.drain()
+    try:
+        await asyncio.wait_for(entered.wait(), 1.0)
+        await asyncio.wait_for(proxy.stop(), 1.0)
+        assert await reader.read() == b""
+        snapshot = await metrics.snapshot(await registry.snapshot())
+        assert snapshot["inflight"] == snapshot["backends"][0]["active"] == 0
+        assert snapshot["totals"]["failed"] == snapshot["backends"][0]["failures"] == 1
+        assert not proxy._client_tasks
+    finally:
+        writer.close()
+        await writer.wait_closed()
+        await proxy.stop()
+        backend.close()
+        await backend.wait_closed()
