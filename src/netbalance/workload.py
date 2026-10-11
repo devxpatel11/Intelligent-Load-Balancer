@@ -6,6 +6,7 @@ import argparse
 import asyncio
 import csv
 import io
+import json
 import math
 import random
 import sys
@@ -19,6 +20,7 @@ from .protocol import (
     ProtocolError,
     encode_message,
     read_message,
+    validate_work,
 )
 
 CSV_COLUMNS = [
@@ -171,7 +173,7 @@ async def execute_single_attempt(
                 reader, writer = await asyncio.open_connection(
                     host, port, limit=MAX_FRAME_BYTES
                 )
-            except (ConnectionRefusedError, ConnectionResetError, OSError) as exc:
+            except (ConnectionRefusedError, ConnectionResetError, OSError):
                 return AttemptResult(
                     request_id=req_id,
                     policy=policy,
@@ -199,7 +201,8 @@ async def execute_single_attempt(
         # Validate response
         resp_id = response.get("id")
         resp_ok = response.get("ok")
-        backend_id = response.get("backend_id")
+        raw_backend_id = response.get("backend_id")
+        backend_id = raw_backend_id if isinstance(raw_backend_id, str) and raw_backend_id else None
 
         if resp_id != req_id:
             ok = False
@@ -214,7 +217,7 @@ async def execute_single_attempt(
             else:
                 ok = True
                 error_code = None
-        else:
+        elif resp_ok is False and (raw_backend_id is None or backend_id is not None):
             ok = False
             err = response.get("error")
             if (
@@ -227,6 +230,9 @@ async def execute_single_attempt(
                 error_code = str(err["code"])
             else:
                 error_code = "MALFORMED_RESPONSE"
+        else:
+            ok = False
+            error_code = "MALFORMED_RESPONSE"
 
         return AttemptResult(
             request_id=req_id,
@@ -284,8 +290,8 @@ async def execute_single_attempt(
         if writer is not None:
             writer.close()
             try:
-                await writer.wait_closed()
-            except (ConnectionError, OSError):
+                await asyncio.wait_for(writer.wait_closed(), timeout_s)
+            except (TimeoutError, ConnectionError, OSError):
                 pass
 
 
@@ -303,7 +309,7 @@ async def run_workload(
     scenario: str = "default",
     repetition: int = 1,
 ) -> tuple[list[AttemptResult], WorkloadSummary]:
-    if not host:
+    if not isinstance(host, str) or not host:
         raise ValueError("host must be a non-empty string")
     if isinstance(port, bool) or not isinstance(port, int) or not (1 <= port <= 65535):
         raise ValueError(f"port must be an integer between 1 and 65535, got {port}")
@@ -313,11 +319,21 @@ async def run_workload(
         raise ValueError("Cannot specify both count and duration")
     if count is not None and (isinstance(count, bool) or not isinstance(count, int) or count <= 0):
         raise ValueError(f"count must be a positive integer, got {count}")
-    if duration is not None and (isinstance(duration, bool) or not isinstance(duration, (int, float)) or duration <= 0):
+    if duration is not None and (
+        isinstance(duration, bool)
+        or not isinstance(duration, (int, float))
+        or not math.isfinite(duration)
+        or duration <= 0
+    ):
         raise ValueError(f"duration must be a positive number, got {duration}")
     if isinstance(concurrency, bool) or not isinstance(concurrency, int) or concurrency < 1:
         raise ValueError(f"concurrency must be a positive integer, got {concurrency}")
-    if isinstance(timeout, bool) or not isinstance(timeout, (int, float)) or timeout <= 0:
+    if (
+        isinstance(timeout, bool)
+        or not isinstance(timeout, (int, float))
+        or not math.isfinite(timeout)
+        or timeout <= 0
+    ):
         raise ValueError(f"timeout must be a positive number, got {timeout}")
 
     rng = random.Random(seed)
@@ -327,11 +343,16 @@ async def run_workload(
     if trace_path is not None:
         trace_requests = []
         with open(trace_path, "r", encoding="utf-8") as f:
-            for line in f:
+            for line_number, line in enumerate(f, 1):
                 line = line.strip()
                 if line:
-                    import json
-                    trace_requests.append(json.loads(line))
+                    try:
+                        request = json.loads(line)
+                        if not isinstance(request, dict):
+                            raise ValueError("request must be a JSON object")
+                        trace_requests.append(validate_work(request))
+                    except (json.JSONDecodeError, ProtocolError, ValueError) as exc:
+                        raise ValueError(f"invalid trace request at line {line_number}: {exc}") from exc
 
     bench_start_mono = time.monotonic()
     results: list[AttemptResult] = []

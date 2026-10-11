@@ -5,7 +5,6 @@ from __future__ import annotations
 import asyncio
 import io
 import math
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -13,7 +12,6 @@ import pytest
 from netbalance.protocol import encode_message
 from netbalance.workload import (
     AttemptResult,
-    WorkloadSummary,
     calculate_percentile,
     compute_summary,
     execute_single_attempt,
@@ -274,6 +272,8 @@ async def test_run_workload_parameter_validation() -> None:
     # Invalid host
     with pytest.raises(ValueError, match="host"):
         await run_workload(host="", port=9000, count=1)
+    with pytest.raises(ValueError, match="host"):
+        await run_workload(host=123, port=9000, count=1)  # type: ignore[arg-type]
 
     # Invalid port
     with pytest.raises(ValueError, match="port"):
@@ -292,6 +292,9 @@ async def test_run_workload_parameter_validation() -> None:
         await run_workload(host="127.0.0.1", port=9000, duration=0.0)
     with pytest.raises(ValueError, match="duration"):
         await run_workload(host="127.0.0.1", port=9000, duration=-1.0)
+    for duration in (math.nan, math.inf):
+        with pytest.raises(ValueError, match="duration"):
+            await run_workload(host="127.0.0.1", port=9000, duration=duration)
 
     # Invalid concurrency
     with pytest.raises(ValueError, match="concurrency"):
@@ -300,6 +303,17 @@ async def test_run_workload_parameter_validation() -> None:
     # Invalid timeout
     with pytest.raises(ValueError, match="timeout"):
         await run_workload(host="127.0.0.1", port=9000, count=1, timeout=0.0)
+    for timeout in (math.nan, math.inf):
+        with pytest.raises(ValueError, match="timeout"):
+            await run_workload(host="127.0.0.1", port=9000, count=1, timeout=timeout)
+
+
+@pytest.mark.asyncio
+async def test_invalid_trace_is_rejected_before_work_starts(tmp_path: Path) -> None:
+    trace = tmp_path / "invalid.jsonl"
+    trace.write_text('{"id":"bad","op":"work","work_units":0,"payload":"x"}\n', encoding="utf-8")
+    with pytest.raises(ValueError, match="invalid trace request at line 1"):
+        await run_workload(host="127.0.0.1", port=9000, count=1, trace_path=trace)
 
 
 @pytest.mark.asyncio
@@ -355,3 +369,34 @@ async def test_attempt_error_response_validation() -> None:
     finally:
         server2.close()
         await server2.wait_closed()
+
+    # Case 3: Error fields do not make a non-boolean outcome valid
+    async def non_boolean_outcome_handler(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+        await reader.readline()
+        writer.write(encode_message({
+            "id": "req-3",
+            "ok": "false",
+            "backend_id": None,
+            "error": {"code": "OVERLOADED", "message": "work limit reached"},
+        }))
+        await writer.drain()
+        writer.close()
+        await writer.wait_closed()
+
+    server3 = await asyncio.start_server(non_boolean_outcome_handler, "127.0.0.1", 0)
+    try:
+        request = {"id": "req-3", "op": "work", "work_units": 1, "payload": "test"}
+        result = await execute_single_attempt(
+            "127.0.0.1",
+            server3.sockets[0].getsockname()[1],
+            request,
+            timeout_s=1.0,
+            policy="rr",
+            scenario="test",
+            repetition=1,
+            started_offset_s=0.0,
+        )
+        assert result.error_code == "MALFORMED_RESPONSE"
+    finally:
+        server3.close()
+        await server3.wait_closed()

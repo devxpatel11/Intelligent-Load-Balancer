@@ -6,7 +6,7 @@ Educational application-aware TCP load balancer with simulated backend workloads
 
 **Current verified milestone: A3 health, controls, and cleanup.** C0, A1-A3, and B1-B2 are implemented. The package provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, automatic backend health probing, FastAPI lifecycle and controls, runnable backends, a workload client, and an offline dashboard.
 
-The complete automated suite currently has 70 passing tests, including real loopback socket round trips, health outage/recovery, control validation, busy reset, shutdown cleanup, overload/no-healthy/refusal/timeout/protocol-error paths, accounting checks, workload/dashboard behavior, fixture compatibility, and service lifecycle/API coverage. A live run with the three B1 backend processes and B2 workload client also completed 30/30 requests with RR assignments of 10/10/10.
+The automated suite covers real loopback sockets and subprocesses, health outage/recovery, control validation, busy reset, exclusive port ownership and prompt cleanup, workload bounds and response validation, safe dashboard rendering, proxy failure paths, accounting, and API lifecycle behavior.
 
 ## Team and ownership
 
@@ -82,7 +82,7 @@ python -m pytest tests/integration -q
 python scripts/verify.py
 ```
 
-On Windows/Python 3.12, A3 verification completed with 70 tests passing. The live G2 path used the three runnable B1 backends, automatic A3 health recovery, and the B2 workload client for 30 successful requests at concurrency 6; RR assigned 10 requests to each backend and cleanup returned all active counts to zero.
+On Windows/Python 3.12, the live G2 path used the three reviewed B1 backends, automatic A3 health recovery, and the B2 workload client for 30 successful requests at concurrency 6; CSV and API totals reconciled, RR assigned 10/10/10, and cleanup returned all active counts to zero. This is integration evidence, not benchmark evidence.
 
 ## Repository map
 
@@ -102,6 +102,6 @@ web/                     Offline dashboard assets added by Member B
 
 ## Next handoff
 
-The next tasks are B3 live dashboard controls/launcher/fault evidence and A4 expanded integration, fault, and accounting coverage after A3 review and merge.
+The next tasks are B3 same-origin dashboard hosting, live controls, launcher/fault evidence, and A4 expanded integration and accounting coverage.
 
 Do not claim later gates, test passes, benchmark results, or screenshots until their artifacts exist in the repository.

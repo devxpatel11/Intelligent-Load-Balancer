@@ -237,23 +237,42 @@ async def _run_test_server_shutdown_frees_port_and_sockets() -> None:
     await asyncio.sleep(0.02)
     assert len(server._active_tasks) > 0
 
-    # Stop server
+    # Stop must cancel the 2.5-second request rather than waiting for it.
+    started = time.perf_counter()
     await server.stop()
+    assert time.perf_counter() - started < 1.0
 
     assert server._server is None
     assert len(server._active_tasks) == 0
     w.close()
+    await w.wait_closed()
 
-    # Verify port is free to be rebound immediately
-    rebound_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        rebound_sock.bind(("127.0.0.1", port))
-    finally:
-        rebound_sock.close()
+    # Verify the production server can reuse the port immediately.
+    rebound = BackendServer("s2", port=port)
+    await rebound.start()
+    await rebound.stop()
 
 
 def test_server_shutdown_frees_port_and_sockets() -> None:
     asyncio.run(_run_test_server_shutdown_frees_port_and_sockets())
+
+
+async def _run_test_duplicate_bind_is_rejected() -> None:
+    first = BackendServer("s1", port=0)
+    await first.start()
+    second = BackendServer("s2", port=first.bound_port)
+    try:
+        with pytest.raises(OSError):
+            await second.start()
+        with pytest.raises(RuntimeError, match="already running"):
+            await first.start()
+    finally:
+        await second.stop()
+        await first.stop()
+
+
+def test_duplicate_bind_and_double_start_are_rejected() -> None:
+    asyncio.run(_run_test_duplicate_bind_is_rejected())
 
 
 async def _run_test_t04_split_frame_handling() -> None:

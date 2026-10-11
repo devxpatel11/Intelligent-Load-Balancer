@@ -20,7 +20,6 @@ from typing import Any, Optional
 from netbalance.protocol import (
     MAX_FRAME_BYTES,
     MAX_ID_CHARS,
-    MAX_PAYLOAD_BYTES,
     ProtocolError,
     encode_message,
     error_response,
@@ -52,6 +51,8 @@ class BackendServer:
     ) -> None:
         if not backend_id or not isinstance(backend_id, str):
             raise ValueError("backend_id must be a non-empty string")
+        if not isinstance(host, str) or not host:
+            raise ValueError("host must be a non-empty string")
         if isinstance(port, bool) or not isinstance(port, int) or not (0 <= port <= 65535):
             raise ValueError(f"port must be an integer between 0 and 65535, got {port}")
         if (
@@ -76,7 +77,6 @@ class BackendServer:
         self._work_semaphore = asyncio.Semaphore(self.capacity)
         self._active_tasks: set[asyncio.Task[None]] = set()
         self._active_writers: set[asyncio.StreamWriter] = set()
-        self._serving = False
 
     @property
     def bound_port(self) -> int:
@@ -92,13 +92,14 @@ class BackendServer:
 
     async def start(self) -> None:
         """Start listening for incoming TCP connections."""
+        if self._server is not None:
+            raise RuntimeError("backend is already running")
         self._server = await asyncio.start_server(
             self._handle_client_connection,
             host=self.host,
             port=self.port,
             limit=MAX_FRAME_BYTES,
         )
-        self._serving = True
         logger.info(
             "[%s] Backend %s listening on %s:%d (service_ms=%.1f, capacity=%d)",
             datetime.datetime.now(datetime.timezone.utc).isoformat(),
@@ -111,10 +112,9 @@ class BackendServer:
 
     async def stop(self) -> None:
         """Gracefully stop server, close sockets, and cleanup all active connections."""
-        self._serving = False
+        server = self._server
         if self._server is not None:
             self._server.close()
-            await self._server.wait_closed()
             self._server = None
 
         # Cancel and close active client connections
@@ -129,6 +129,9 @@ class BackendServer:
                 task.cancel()
             await asyncio.gather(*self._active_tasks, return_exceptions=True)
             self._active_tasks.clear()
+
+        if server is not None:
+            await server.wait_closed()
 
         for writer in list(self._active_writers):
             try:
