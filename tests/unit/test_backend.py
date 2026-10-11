@@ -173,3 +173,14 @@ def test_logging_payload_privacy(caplog: pytest.LogCaptureFixture) -> None:
 
     for record in caplog.records:
         assert secret_payload not in record.message
+
+
+def test_backend_uses_shared_protocol_helpers() -> None:
+    """Verify that backend server re-exports and uses netbalance.protocol helpers."""
+    import netbalance.backend as backend_mod
+    import netbalance.protocol as proto_mod
+
+    assert backend_mod.ProtocolError is proto_mod.ProtocolError
+    sample = {"id": "p1", "op": "health"}
+    assert backend_mod.encode_json_frame(sample) == proto_mod.encode_message(sample)
+

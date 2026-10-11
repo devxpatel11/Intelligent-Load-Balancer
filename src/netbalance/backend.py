@@ -1,7 +1,8 @@
 """Backend server for the Intelligent Network Load Balancer.
 
 Implements the frozen newline-delimited JSON TCP protocol for work and health requests
-according to docs/contracts.md and docs/protocol.md.
+according to docs/contracts.md and docs/protocol.md, using shared helpers from
+netbalance.protocol.
 """
 
 from __future__ import annotations
@@ -9,34 +10,33 @@ from __future__ import annotations
 import argparse
 import asyncio
 import datetime
-import json
 import logging
 import math
 import signal
 import sys
+from collections.abc import Mapping
 from typing import Any, Optional
 
-MAX_FRAME_BYTES = 65536
+from netbalance.protocol import (
+    MAX_FRAME_BYTES,
+    MAX_ID_CHARS,
+    MAX_PAYLOAD_BYTES,
+    ProtocolError,
+    encode_message,
+    error_response,
+    read_message,
+    validate_health,
+    validate_work,
+)
+
 CLIENT_READ_TIMEOUT_S = 2.0
-MAX_PAYLOAD_BYTES = 1024
-MAX_ID_CHARS = 64
 
 logger = logging.getLogger("netbalance.backend")
 
 
-class ProtocolError(Exception):
-    """Protocol-level error associated with a specific error code."""
-
-    def __init__(self, code: str, message: str, request_id: Optional[str] = None):
-        super().__init__(message)
-        self.code = code
-        self.message = message
-        self.request_id = request_id
-
-
-def encode_json_frame(data: dict[str, Any]) -> bytes:
-    """Serialize dictionary as compact UTF-8 JSON followed by newline."""
-    return (json.dumps(data, separators=(",", ":"), ensure_ascii=False) + "\n").encode("utf-8")
+def encode_json_frame(data: Mapping[str, Any]) -> bytes:
+    """Serialize dictionary as compact UTF-8 JSON followed by newline using A1 helper."""
+    return encode_message(data)
 
 
 class BackendServer:
@@ -96,6 +96,7 @@ class BackendServer:
             self._handle_client_connection,
             host=self.host,
             port=self.port,
+            limit=MAX_FRAME_BYTES,
         )
         self._serving = True
         logger.info(
@@ -164,76 +165,19 @@ class BackendServer:
 
         task.add_done_callback(_cleanup)
 
-    async def _read_frame(self, reader: asyncio.StreamReader) -> bytes:
-        """Read a single newline-terminated frame within deadline and size limit."""
-        buffer = bytearray()
-        while True:
-            if len(buffer) >= MAX_FRAME_BYTES:
-                raise ProtocolError("FRAME_TOO_LARGE", "frame size exceeds 65536 bytes")
-            try:
-                chunk = await reader.read(min(4096, MAX_FRAME_BYTES - len(buffer)))
-            except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError) as exc:
-                raise ProtocolError("INVALID_REQUEST", f"client disconnected: {exc}") from exc
-            if not chunk:
-                # Reached EOF before receiving newline delimiter
-                raise ProtocolError("INVALID_REQUEST", "unexpected EOF before newline")
-            buffer.extend(chunk)
-            newline_index = buffer.find(b"\n")
-            if newline_index != -1:
-                frame = bytes(buffer[: newline_index + 1])
-                if len(frame) > MAX_FRAME_BYTES:
-                    raise ProtocolError("FRAME_TOO_LARGE", "frame size exceeds 65536 bytes")
-                return bytes(buffer[:newline_index])
-
     def _validate_request(self, payload_dict: Any) -> dict[str, Any]:
-        """Strictly validate incoming parsed JSON request object."""
+        """Strictly validate incoming parsed JSON request object using protocol helpers."""
         if not isinstance(payload_dict, dict):
             raise ProtocolError("INVALID_REQUEST", "request must be a JSON object")
 
-        req_id = payload_dict.get("id")
-        if (
-            isinstance(req_id, bool)
-            or not isinstance(req_id, str)
-            or not req_id
-            or len(req_id) > MAX_ID_CHARS
-        ):
-            raise ProtocolError(
-                "INVALID_REQUEST",
-                "id must be a non-empty string of at most 64 characters",
-                request_id=None,
-            )
-
         op = payload_dict.get("op")
         if op == "health":
-            return payload_dict
+            return validate_health(payload_dict)
         elif op == "work":
-            work_units = payload_dict.get("work_units")
-            if (
-                isinstance(work_units, bool)
-                or not isinstance(work_units, int)
-                or not (1 <= work_units <= 10)
-            ):
-                raise ProtocolError(
-                    "INVALID_REQUEST",
-                    "work_units must be an integer from 1 through 10",
-                    request_id=req_id,
-                )
-
-            payload = payload_dict.get("payload")
-            if not isinstance(payload, str):
-                raise ProtocolError(
-                    "INVALID_REQUEST",
-                    "payload must be a string",
-                    request_id=req_id,
-                )
-            if len(payload.encode("utf-8")) > MAX_PAYLOAD_BYTES:
-                raise ProtocolError(
-                    "INVALID_REQUEST",
-                    f"payload exceeds {MAX_PAYLOAD_BYTES} bytes",
-                    request_id=req_id,
-                )
-            return payload_dict
+            return validate_work(payload_dict)
         else:
+            raw_id = payload_dict.get("id")
+            req_id = raw_id if isinstance(raw_id, str) and len(raw_id) <= MAX_ID_CHARS else None
             raise ProtocolError(
                 "INVALID_REQUEST",
                 f"unsupported operation '{op}'",
@@ -254,30 +198,20 @@ class BackendServer:
         extracted_id: Optional[str] = None
         now_ts = lambda: datetime.datetime.now(datetime.timezone.utc).isoformat()
         try:
-            # Enforce 2.0 second client read timeout
-            try:
-                frame_bytes = await asyncio.wait_for(
-                    self._read_frame(reader), timeout=CLIENT_READ_TIMEOUT_S
-                )
-            except asyncio.TimeoutError:
-                raise ProtocolError("CLIENT_READ_TIMEOUT", "client frame read timed out")
+            # Read complete newline-delimited frame within deadline using A1 protocol helper
+            message = await read_message(
+                reader,
+                timeout_s=CLIENT_READ_TIMEOUT_S,
+                timeout_code="CLIENT_READ_TIMEOUT",
+                invalid_code="INVALID_REQUEST",
+            )
 
-            try:
-                decoded_str = frame_bytes.decode("utf-8")
-            except UnicodeDecodeError:
-                raise ProtocolError("INVALID_REQUEST", "invalid UTF-8 sequence")
-
-            try:
-                parsed_json = json.loads(decoded_str)
-            except Exception:
-                raise ProtocolError("INVALID_REQUEST", "invalid JSON syntax")
-
-            if isinstance(parsed_json, dict) and isinstance(parsed_json.get("id"), str):
-                raw_id = parsed_json["id"]
+            if isinstance(message, dict) and isinstance(message.get("id"), str):
+                raw_id = message["id"]
                 if raw_id and len(raw_id) <= MAX_ID_CHARS and not isinstance(raw_id, bool):
                     extracted_id = raw_id
 
-            validated = self._validate_request(parsed_json)
+            validated = self._validate_request(message)
             extracted_id = validated["id"]
             op = validated["op"]
 
@@ -290,7 +224,6 @@ class BackendServer:
             )
 
             if op == "health":
-                # Health probe bypasses work capacity slots
                 response_data = {
                     "id": validated["id"],
                     "ok": True,
@@ -298,7 +231,6 @@ class BackendServer:
                     "status": "healthy",
                 }
             else:
-                # Work request acquires capacity slot and simulates processing
                 work_units = validated["work_units"]
                 payload = validated["payload"]
                 await self._process_work(work_units)
@@ -309,7 +241,7 @@ class BackendServer:
                     "echo": payload,
                 }
 
-            response_bytes = encode_json_frame(response_data)
+            response_bytes = encode_message(response_data)
             writer.write(response_bytes)
             await writer.drain()
 
@@ -331,17 +263,14 @@ class BackendServer:
                 err.code,
                 err.message,
             )
-            error_response = {
-                "id": req_id,
-                "ok": False,
-                "backend_id": self.backend_id,
-                "error": {
-                    "code": err.code,
-                    "message": err.message,
-                },
-            }
+            err_dict = error_response(
+                code=err.code,
+                message=err.message,
+                request_id=req_id,
+                backend_id=self.backend_id,
+            )
             try:
-                writer.write(encode_json_frame(error_response))
+                writer.write(encode_message(err_dict))
                 await writer.drain()
             except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError, OSError):
                 pass
@@ -363,17 +292,14 @@ class BackendServer:
                 self.backend_id,
                 exc,
             )
-            error_response = {
-                "id": extracted_id,
-                "ok": False,
-                "backend_id": self.backend_id,
-                "error": {
-                    "code": "INVALID_REQUEST",
-                    "message": "internal server error",
-                },
-            }
+            err_dict = error_response(
+                code="INVALID_REQUEST",
+                message="internal server error",
+                request_id=extracted_id,
+                backend_id=self.backend_id,
+            )
             try:
-                writer.write(encode_json_frame(error_response))
+                writer.write(encode_message(err_dict))
                 await writer.drain()
             except (ConnectionResetError, ConnectionAbortedError, BrokenPipeError, OSError):
                 pass
