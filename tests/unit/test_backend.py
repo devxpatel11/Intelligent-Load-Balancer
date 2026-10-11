@@ -41,6 +41,8 @@ def test_server_init_validation() -> None:
         BackendServer(backend_id="", port=9101)
     with pytest.raises(ValueError, match="backend_id"):
         BackendServer(backend_id=None, port=9101)  # type: ignore
+    with pytest.raises(ValueError, match="host"):
+        BackendServer(backend_id="s1", host="")
 
     # Invalid port
     with pytest.raises(ValueError, match="port"):
