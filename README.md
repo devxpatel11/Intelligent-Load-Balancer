@@ -4,9 +4,9 @@ Educational application-aware TCP load balancer with simulated backend workloads
 
 ## Project status
 
-**Current verified milestone: A3 health, controls, and cleanup.** C0, A1-A3, and B1-B2 are implemented. The package provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, automatic backend health probing, FastAPI lifecycle and controls, runnable backends, a workload client, and an offline dashboard.
+**Current verified milestone: A4 integration, fault, and accounting coverage; G3 is complete.** C0, A1-A4, and B1-B3 are implemented. The package provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, automatic backend health probing, FastAPI lifecycle and controls, runnable backends, a workload client, a portable demo launcher, and an offline dashboard with live controls.
 
-The 72-test automated suite covers real loopback sockets and subprocesses, health outage/recovery, control validation, busy reset, exclusive port ownership and prompt cleanup, workload bounds and response validation, safe dashboard rendering, proxy failure paths, accounting, and API lifecycle behavior.
+The 79-test automated suite covers real loopback sockets and subprocesses, three-backend end-to-end traffic, health outage/recovery, all-down and timeout faults, control validation, busy reset, exclusive port ownership and prompt cleanup, workload bounds and response validation, safe dashboard rendering, proxy failure paths, accounting invariants, and API lifecycle behavior.
 
 ## Team and ownership
 
@@ -82,7 +82,7 @@ python -m pytest tests/integration -q
 python scripts/verify.py
 ```
 
-On Windows/Python 3.12, the post-B1/B2 A3 merge gate passed 72 automated tests. Its live path used the three reviewed B1 backends, automatic A3 health recovery, and the B2 workload client for 30 successful requests at concurrency 6; CSV and API totals reconciled, RR assigned 10/10/10, and cleanup returned all active counts to zero. This is integration evidence, not benchmark evidence.
+On Windows/Python 3.12, the A4 gate passed 79 automated tests, including 24 integration tests. Its end-to-end path used three real B1 backends, the A service/proxy, automatic health recovery, and the B2 workload client for 30 successful requests at concurrency 6; CSV and API totals reconciled, RR assigned 10/10/10, and cleanup returned all active counts to zero. This is integration evidence, not benchmark evidence.
 
 ## Repository map
 
@@ -102,6 +102,6 @@ web/                     Offline dashboard assets added by Member B
 
 ## Next handoff
 
-The next tasks are B3 same-origin dashboard hosting, live controls, launcher/fault evidence, and A4 expanded integration and accounting coverage.
+The next task is B4 benchmark/analyzer dry-run; G4 completes only after B4 merges with nonempty, traceable dry-run artifacts.
 
 Do not claim later gates, test passes, benchmark results, or screenshots until their artifacts exist in the repository.
