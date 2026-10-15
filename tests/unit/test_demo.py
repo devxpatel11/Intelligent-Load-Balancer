@@ -108,3 +108,35 @@ def test_launcher_cleanup_terminates_only_owned_processes() -> None:
     assert mock_p1.terminate.called
     assert mock_p2.terminate.called
     assert len(launcher.processes) == 0
+
+
+def test_launcher_does_not_leave_child_output_in_unread_pipes() -> None:
+    config = AppConfig(
+        listen_host="127.0.0.1",
+        listen_port=9000,
+        http_host="127.0.0.1",
+        http_port=8000,
+        algorithm="rr",
+        max_inflight=10,
+        client_frame_timeout_s=0.5,
+        backend_connect_timeout_s=0.5,
+        backend_timeout_s=1.0,
+        workload_timeout_s=2.0,
+        health_interval_s=0.1,
+        health_timeout_s=0.1,
+        fail_threshold=2,
+        recover_threshold=2,
+        backends=(BackendConfig("s1", "127.0.0.1", 9101, 1),),
+    )
+    child = MagicMock()
+    child.poll.return_value = None
+    with (
+        patch.object(DemoLauncher, "verify_ports_available"),
+        patch("netbalance.demo.wait_for_port", return_value=True),
+        patch("netbalance.demo.subprocess.Popen", return_value=child) as popen,
+    ):
+        launcher = DemoLauncher(config)
+        launcher.start()
+        assert len(popen.call_args_list) == 2
+        assert all("stdout" not in call.kwargs and "stderr" not in call.kwargs for call in popen.call_args_list)
+        launcher.terminate_all()

@@ -140,8 +140,6 @@ class DemoLauncher:
             logger.info("Starting backend %s on %s:%d (service=%sms, cap=%d)...", b.id, b.host, b.port, service_ms, capacity)
             proc = subprocess.Popen(
                 cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
                 text=True,
             )
             self.processes.append(ManagedProcess(name=f"backend-{b.id}", process=proc))
@@ -164,8 +162,6 @@ class DemoLauncher:
         logger.info("Starting NetBalance service (proxy :%d, HTTP :%d)...", self.config.listen_port, self.config.http_port)
         service_proc = subprocess.Popen(
             service_cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
             text=True,
         )
         self.processes.append(ManagedProcess(name="service", process=service_proc))
@@ -188,8 +184,7 @@ class DemoLauncher:
         for mp in self.processes:
             ret = mp.process.poll()
             if ret is not None:
-                _, stderr = mp.process.communicate()
-                logger.error("Child process %s exited prematurely with code %d. Stderr: %s", mp.name, ret, stderr.strip())
+                logger.error("Child process %s exited prematurely with code %d", mp.name, ret)
 
     def terminate_all(self, timeout_s: float = 3.0) -> None:
         """Gracefully terminate only processes started and owned by this launcher."""
@@ -227,8 +222,7 @@ class DemoLauncher:
                 for mp in self.processes:
                     ret = mp.process.poll()
                     if ret is not None:
-                        _, stderr = mp.process.communicate()
-                        raise RuntimeError(f"Child process {mp.name} exited unexpectedly (code {ret}): {stderr.strip()}")
+                        raise RuntimeError(f"Child process {mp.name} exited unexpectedly (code {ret})")
                 time.sleep(0.5)
         except KeyboardInterrupt:
             logger.info("KeyboardInterrupt received.")
