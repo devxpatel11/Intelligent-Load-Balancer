@@ -102,7 +102,7 @@ The separate B3 live outage run stopped `s2` near 3 seconds and restarted it nea
 - The experiment does not measure OS CPU, memory, bandwidth, packets, TLS, multi-host latency, or multi-worker coordination.
 - Python scheduling and host load affect timings. Raw rows and environment/config snapshots are retained so differences can be audited.
 - The default health thresholds allow a finite detection window; assigned work can fail during transitions, and requests are deliberately not replayed.
-- Linux behavior is covered by the repository CI definition but the reconstructed branch must run remotely before claiming a successful hosted CI execution.
+- Linux behavior is covered by successful Python 3.12 Ubuntu CI, while the committed timing evidence remains specific to the recorded Windows host.
 
 ## Conclusion and future work
 

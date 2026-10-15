@@ -1,11 +1,9 @@
 # Team contributions and handoffs
 
-Replace the identity placeholders before submission.
-
 | Role | Name / registration | Owned work | Review duty |
 | --- | --- | --- | --- |
-| Member A | TODO | Protocol, selectors, registry, metrics, proxy, service, configuration, API tests, README/integration | Reviews B PRs |
-| Member B | TODO | Backend, workload, benchmark, analyzer, demo, web UI, experiment evidence, report drafts | Reviews A PRs |
+| Member A | `devxpatel11` (GitHub) | Protocol, selectors, registry, metrics, proxy, service, configuration, API tests, README/integration | Reviews B PRs |
+| Member B | `akshatjha459-byte` (GitHub) | Backend, workload, benchmark, analyzer, demo, web UI, experiment evidence, report drafts | Reviews A PRs |
 
 ## Dependency order
 

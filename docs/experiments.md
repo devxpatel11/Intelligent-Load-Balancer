@@ -26,3 +26,11 @@ results/<scenario>/<policy>/<repetition>/
 ```
 
 Required raw columns are `request_id`, `policy`, `scenario`, `repetition`, `started_offset_s`, `latency_ms`, `ok`, `backend_id`, and `error_code`. Reports show successful throughput, successful p95 latency, assignments by backend, and failures separately. A single outage demo is not a statistically strong comparison. The executed matrix, aggregate table, chart, commit identity, elapsed time, and all per-run files are under `results/experiments/`; interpreted results are in `docs/report.md`.
+
+Audit the committed matrix without regenerating or overwriting it:
+
+```text
+python scripts/audit_evidence.py
+```
+
+B6 reconciled all 36 runs, 10,800 measured attempts, and 217 indexed files.
