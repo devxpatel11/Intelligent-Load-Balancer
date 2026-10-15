@@ -28,3 +28,4 @@ where = ["src"]
 addopts = "--strict-markers"
 asyncio_mode = "strict"
 testpaths = ["tests"]
+markers = ["integration"]
