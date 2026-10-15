@@ -29,3 +29,9 @@ jobs:
         run: python scripts/verify.py
       - name: Run tests
         run: python -m pytest tests -q
+      - name: Audit committed evidence
+        run: python scripts/audit_evidence.py
+      - name: Rehearse live demo
+        run: python scripts/rehearse_demo.py
+      - name: Check dependencies
+        run: python -m pip check

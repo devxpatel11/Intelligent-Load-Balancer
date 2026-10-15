@@ -8,7 +8,7 @@
 ## Dependency order
 
 ```text
-C0 -> A1 + B1 -> A2 + B2 -> A3 + B3 -> A4 + B4 -> A5 + B5 -> A6 + B6 -> G6
+C0 -> A1 + B1 -> A2 + B2 -> A3 + B3 -> A4 + B4 -> A5 + B5 -> B6 -> A6 -> G6
 ```
 
 Provider changes merge first. Consumer branches then update from `main` and rerun their checks. Member B writes task facts/evidence to `docs/readme-notes/Bn.md`; Member A reconciles them into `README.md` only after both daily branches merge.
