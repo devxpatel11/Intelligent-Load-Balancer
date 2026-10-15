@@ -4,9 +4,9 @@ Educational application-aware TCP load balancer with simulated backend workloads
 
 ## Project status
 
-**Current verified milestone: A4 integration, fault, and accounting coverage; G3 is complete.** C0, A1-A4, and B1-B3 are implemented. The package provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, automatic backend health probing, FastAPI lifecycle and controls, runnable backends, a workload client, a portable demo launcher, and an offline dashboard with live controls.
+**Current verified milestone: A4 integration, fault, and accounting coverage; G3 is complete.** C0, A1-A4, and B1-B4 are implemented. The package provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, automatic backend health probing, FastAPI lifecycle and controls, runnable backends, a workload client, benchmark/analyzer tools, a portable demo launcher, and an offline dashboard with live controls.
 
-The 79-test automated suite covers real loopback sockets and subprocesses, three-backend end-to-end traffic, health outage/recovery, all-down and timeout faults, control validation, busy reset, exclusive port ownership and prompt cleanup, workload bounds and response validation, safe dashboard rendering, proxy failure paths, accounting invariants, and API lifecycle behavior.
+The 88-test automated suite covers real loopback sockets and subprocesses, three-backend end-to-end traffic, health outage/recovery, all-down and timeout faults, control validation, busy reset, exclusive port ownership and prompt cleanup, workload bounds and response validation, benchmark/analyzer dry runs, safe dashboard rendering, proxy failure paths, accounting invariants, and API lifecycle behavior.
 
 ## Team and ownership
 
@@ -82,7 +82,7 @@ python -m pytest tests/integration -q
 python scripts/verify.py
 ```
 
-On Windows/Python 3.12, the A4 gate passed 79 automated tests, including 24 integration tests. Its end-to-end path used three real B1 backends, the A service/proxy, automatic health recovery, and the B2 workload client for 30 successful requests at concurrency 6; CSV and API totals reconciled, RR assigned 10/10/10, and cleanup returned all active counts to zero. This is integration evidence, not benchmark evidence.
+On Windows/Python 3.12, the combined post-B4 A4 gate passed 88 automated tests. Its end-to-end path used three real B1 backends, the A service/proxy, automatic health recovery, and the B2 workload client for 30 successful requests at concurrency 6; CSV and API totals reconciled, RR assigned 10/10/10, and cleanup returned all active counts to zero. This is integration evidence, not benchmark evidence.
 
 ## Repository map
 
