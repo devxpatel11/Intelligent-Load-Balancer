@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-10-15T16:31:42.948569+00:00",
+  "git_commit": "6d1ee23f829ce811263900e22c0a023ba23036df",
+  "environment": {
+    "python": "3.12.4 (tags/v3.12.4:8e8a4ba, Jun  6 2024, 19:30:16) [MSC v.1940 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26300-SP0"
+  },
+  "arguments": {
+    "host": "127.0.0.1",
+    "port": 9000,
+    "count": 30,
+    "duration": null,
+    "concurrency": 6,
+    "seed": 42,
+    "timeout": 4.0,
+    "output": "results/dry_run.csv",
+    "trace": null,
+    "policy": "rr",
+    "scenario": "dry-run",
+    "repetition": 1,
+    "http_host": "127.0.0.1",
+    "http_port": 8000,
+    "metadata_output": null
+  },
+  "service_config": {
+    "listen_host": "127.0.0.1",
+    "listen_port": 9000,
+    "http_host": "127.0.0.1",
+    "http_port": 8000,
+    "algorithm": "rr",
+    "max_inflight": 200,
+    "client_frame_timeout_s": 2.0,
+    "backend_connect_timeout_s": 0.5,
+    "backend_timeout_s": 3.0,
+    "workload_timeout_s": 4.0,
+    "health_interval_s": 1.0,
+    "health_timeout_s": 0.5,
+    "fail_threshold": 2,
+    "recover_threshold": 2,
+    "backends": [
+      {
+        "id": "s1",
+        "host": "127.0.0.1",
+        "port": 9101,
+        "weight": 1
+      },
+      {
+        "id": "s2",
+        "host": "127.0.0.1",
+        "port": 9102,
+        "weight": 1
+      },
+      {
+        "id": "s3",
+        "host": "127.0.0.1",
+        "port": 9103,
+        "weight": 1
+      }
+    ],
+    "config_revision": 0
+  },
+  "summary": {
+    "total_attempts": 30,
+    "successful_attempts": 30,
+    "failed_attempts": 0,
+    "duration_s": 0.6869999999980791,
+    "throughput_rps": 43.66812227086445,
+    "mean_latency_ms": 126.57846999985243,
+    "p50_latency_ms": 124.63950000528712,
+    "p95_latency_ms": 211.38950000022305,
+    "p99_latency_ms": 215.75529999972787
+  }
+}
