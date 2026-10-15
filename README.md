@@ -4,7 +4,7 @@ NetBalance is an educational application-aware TCP load balancer built with Pyth
 
 ## Verified status
 
-A1-A6 and B1-B6 are implemented and integrated. The current suite has 93 passing tests, including real loopback backend/proxy traffic, 30-request RR distribution, outage/recovery, all-down, timeout, overload, protocol, accounting, cleanup, dashboard/API, benchmark metadata, analyzer reconciliation, experiment aggregation, and evidence-audit paths.
+A1-A6 and B1-B6 are implemented and integrated. The current suite has 94 passing tests, including real loopback backend/proxy traffic, 30-request RR distribution, outage/recovery, all-down, timeout, overload, protocol, accounting, cleanup, dashboard/API, benchmark metadata, analyzer reconciliation, experiment aggregation, and evidence-audit paths.
 
 Committed B3 evidence demonstrates RR `10:10:10`, SWRR `15:9:6` at weights `5:3:2`, and bounded failures followed by backend recovery. B4 includes a traceable 30/30-success dry run. B5 adds 36 measured runs with raw/config/environment/trace/proxy evidence, aggregates, a comparison chart, and an evidence-backed report. B6 independently audits all 10,800 measured attempts and provides a bounded live release rehearsal.
 
