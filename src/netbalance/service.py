@@ -11,6 +11,8 @@ from typing import Annotated, Literal
 
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field, StrictInt
 
 from .config import AppConfig, load_config
@@ -162,6 +164,14 @@ def create_app(config: AppConfig) -> FastAPI:
         except RuntimeError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         return {"metrics_epoch": epoch}
+
+    web_root = Path(__file__).resolve().parents[2] / "web"
+
+    @app.get("/", include_in_schema=False)
+    async def dashboard() -> RedirectResponse:
+        return RedirectResponse("/web/")
+
+    app.mount("/web", StaticFiles(directory=web_root, html=True), name="web")
 
     return app
 

@@ -1,111 +1,123 @@
-# Intelligent Network Load Balancer with Dynamic Traffic Routing
+# Intelligent Network Load Balancer
 
-Educational application-aware TCP load balancer with simulated backend workloads. The finished system will route one newline-delimited JSON request per TCP connection across three independent backend processes and compare Round Robin (`rr`), Least Connections (`lc`), and Smooth Weighted Round Robin (`swrr`).
+NetBalance is an educational application-aware TCP load balancer built with Python 3.12, `asyncio` streams, FastAPI, and a local vanilla-JavaScript dashboard. It routes one newline-delimited JSON request per connection across three independent backends using Round Robin (`rr`), Least Connections (`lc`), or Smooth Weighted Round Robin (`swrr`).
 
-## Project status
+## Verified status
 
-**Current verified milestone: A2 core proxy/service.** C0, A1, and A2 are implemented. The package now provides strict JSON-line framing and validation, RR/LC/SWRR selectors, atomic backend reservation accounting, metrics, a real asyncio TCP proxy, FastAPI lifecycle, and read-only metrics/config/health endpoints.
+A1-A4 and B1-B4 are implemented and integrated. The current suite has 87 passing tests, including real loopback backend/proxy traffic, 30-request RR distribution, outage/recovery, all-down, timeout, overload, protocol, accounting, cleanup, dashboard/API, benchmark metadata, and analyzer reconciliation paths.
 
-The complete automated suite currently has 32 passing tests, including real loopback socket round trips, a 30-request/three-backend RR run, overload/no-healthy/refusal/timeout/protocol-error paths, accounting checks, fixture compatibility, and service lifecycle/API coverage. B1 backends, B2 workload/dashboard, and A3 automated health/control/reliability behavior remain pending.
+Committed B3 evidence demonstrates RR `10:10:10`, SWRR `15:9:6` at weights `5:3:2`, and bounded failures followed by backend recovery. B4 includes a traceable 30/30-success dry run. B5's repeated comparative experiment is intentionally not claimed yet.
 
-## Team and ownership
+## Architecture and contracts
 
-| Member | Exclusive implementation area | Shared responsibility |
-| --- | --- | --- |
-| Member A | Protocol, selectors, registry, metrics, proxy, service, configuration, API tests, `README.md`, `AGENTS.md` | Review B changes; daily integration; architecture explanation |
-| Member B | Backend, workload, benchmark, analyzer, demo launcher, web assets, experiment evidence, report drafts, UI/generator tests | Review A changes; demonstration; result interpretation |
+```text
+workload/benchmark -- TCP 127.0.0.1:9000 --> proxy -- TCP --> s1 :9101
+browser ---------- HTTP 127.0.0.1:8000 -----+-----------> s2 :9102
+                                                         `-> s3 :9103
+```
 
-Replace the member labels with names and registration details in `docs/contributions.md` before submission.
+The service runs with exactly one Uvicorn worker and no auto-reload. Initial `unknown` and `unhealthy` backends are ineligible; health probes bypass work capacity; requests are never automatically replayed.
 
-## Frozen design
-
-- Python 3.12 and real `asyncio` TCP streams.
-- Proxy TCP endpoint: `127.0.0.1:9000`.
-- Local HTTP API/dashboard: `127.0.0.1:8000`, one Uvicorn worker.
-- Backends: `s1`/`s2`/`s3` on ports `9101`/`9102`/`9103`.
-- One UTF-8 JSON line request and response per connection; maximum complete frame 65,536 bytes including newline.
-- Initial backend health is `unknown` and therefore ineligible.
-- No automatic replay after a backend failure.
-
-The authoritative contracts are [protocol](docs/protocol.md), [component/API contracts](docs/contracts.md), and [metrics](docs/metrics.md). Contract changes must be reviewed and merged before dependent implementation changes.
+The frozen interfaces are [TCP protocol](docs/protocol.md), [components/configuration/API](docs/contracts.md), and [metrics](docs/metrics.md). The dashboard reports application request flow and application failures—not packet capture, packet loss, CPU, memory, or bandwidth utilization.
 
 ## Setup
 
-Python 3.12, Git, and a browser are required. Initial package installation needs internet access; the installed demo must not depend on external services or CDN assets.
+Python 3.12 and Git are required. Installation needs package-index access; runtime uses no cloud service, database, Node, or CDN.
 
-### Windows PowerShell
+Windows PowerShell:
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt -r requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 python -m pip install --no-deps -e .
 python scripts/verify.py
 ```
 
-If activation is blocked by local policy, call `.\.venv\Scripts\python.exe` directly instead of changing machine-wide policy.
-
-### POSIX shell
+POSIX shell:
 
 ```sh
 python3.12 -m venv .venv
 . .venv/bin/activate
-python -m pip install -r requirements.txt -r requirements-dev.txt
+python -m pip install -r requirements-dev.txt
 python -m pip install --no-deps -e .
 python scripts/verify.py
 ```
 
-The dependency set was resolved and import-smoke-tested on Windows with Python 3.12.4 on 6 October 2026. The POSIX commands are documented but not yet verified on this repository.
+The pinned environment was verified on Windows. The POSIX commands are exercised by the Ubuntu CI workflow.
 
-## Planned runtime topology
+## Run the live system
+
+Start the three backends and the single-worker service with one owned-process launcher:
 
 ```text
-traffic generator --TCP :9000--> proxy/service --TCP--> s1 :9101
-                                      |          |-----> s2 :9102
-browser ----------HTTP :8000----------+          `-----> s3 :9103
+python -m netbalance.demo --profile uniform
 ```
 
-The dashboard will display application request flow, not captured IP packets. Application failure rate is not packet-loss rate, and active backend work is not CPU utilization.
+Open `http://127.0.0.1:8000/`. Press `Ctrl+C` in the launcher terminal to stop only its child processes. The other profiles are `slow-server` and `capacity`.
 
-## Collaboration
+Useful HTTP endpoints:
 
-All implementation work starts from current `main`, uses one task branch and one worktree, and enters `main` through a reviewed pull request. Member A is the only direct editor of `README.md`; Member B records README input in `docs/readme-notes/Bn.md`. Provider changes merge before consumer changes, and the consumer updates from `main` and reruns its checks before merge.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| GET | `/api/health` | Service readiness and backend health |
+| GET | `/api/metrics` | Immutable counters, latencies, backend state, recent events |
+| GET | `/api/config` | Current policy, weights, deadlines, and revision |
+| POST | `/api/algorithm` | Apply `{"algorithm":"rr"}`, `lc`, or `swrr` |
+| POST | `/api/weights` | Apply all backend weights, for example `{"weights":{"s1":5,"s2":3,"s3":2}}` |
+| POST | `/api/reset` | Reset idle metrics with `{}`; active work returns `409` |
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for exact commands and [repository settings](docs/repository-settings.md) for the intended branch-protection rules.
-The task order is summarized in [the dependency table](docs/task-dependencies.md).
-
-## Current test commands
+Run a basic workload while the demo is active:
 
 ```text
+python -m netbalance.workload --count 30 --concurrency 6 --output results/manual.csv --policy rr --scenario manual
+```
+
+## Benchmark and analyze
+
+The benchmark requires a live proxy and HTTP API. It saves raw per-attempt CSV plus metadata containing the commit, environment, arguments, live configuration, measured duration, and summary:
+
+```text
+python -m netbalance.benchmark --count 300 --concurrency 30 --policy rr --scenario uniform --output results/uniform_rr.csv
+python -m netbalance.analyze results/uniform_rr.csv --output results/uniform_rr_summary.json
+```
+
+Use `--host`/`--port` for the TCP proxy and `--http-host`/`--http-port` for the API when not using default ports. The analyzer rejects malformed rows and count mismatches and uses the frozen successful-throughput and nearest-rank percentile definitions.
+
+## Verification
+
+```text
+python scripts/verify.py
 python -m pytest tests/unit -q
 python -m pytest tests/integration -q
-python scripts/verify.py
+python -m pytest -q
+python -m pip check
 ```
 
-On Windows/Python 3.12.4, A1/A2 verification completed with 24 unit tests and 8 real-socket/service integration tests passing. A2 integration uses contract-faithful loopback backend stubs because the independently runnable B1 backend is intentionally not implemented by Member A.
+Integration tests use real loopback sockets, ephemeral ports, finite readiness/deadline polling, and cleanup limited to owned processes. Timing values are evidence, not deterministic pass thresholds.
+
+## Evidence
+
+- `results/demo_rr_30.csv`, `demo_swrr_30.csv`, `demo_outage_recovery.csv`, and `demo_outage_meta.json`: B3 live behavior evidence.
+- `results/dry_run.csv`, `dry_run.csv.meta.json`, and `dry_run_summary.json`: B4 benchmark/analyzer dry run.
+- `docs/readme-notes/`: task commits, exact commands/results, acceptance checks, limitations, and next-task readiness.
+- `docs/experiments.md`: controlled B5 plan; planned claims remain separate from measured results.
+
+## Collaboration and repository policy
+
+Member A owns the proxy/service/configuration/API paths and this README. Member B owns backends, workloads, demo/benchmark/analyzer, web assets, and generated evidence. See [AGENTS.md](AGENTS.md), [CONTRIBUTING.md](CONTRIBUTING.md), and [repository settings](docs/repository-settings.md) before changing code.
+
+Changes use task branches and isolated worktrees, cross-review, successful required checks, and sequential merges. Frozen contract changes require a dedicated approved pull request.
 
 ## Repository map
 
 ```text
 configs/                 Frozen default runtime configuration
-docs/                    Contracts, ownership, test and evidence plans
-docs/readme-notes/       Per-task handoff notes; A integrates README
-results/                 Generated benchmark evidence (not fabricated)
-screenshots/             Repository-relative demonstration evidence
-scripts/verify.py        Foundation/configuration verifier
-src/netbalance/          Protocol, selectors, registry, metrics, proxy, service
-tests/fixtures/          Frozen API fixture
-tests/unit/              Mathematical/parsing tests added by tasks
-tests/integration/       Real loopback socket/process tests added by tasks
-web/                     Offline dashboard assets added by Member B
+docs/                    Contracts, plans, handoffs, and report
+results/                 Traceable generated evidence
+scripts/                 Verification and live evidence helpers
+src/netbalance/          Service, proxy, backend, workload, and analysis code
+tests/unit/              Parsing, selection, accounting, UI, and tool tests
+tests/integration/       Real loopback and owned-process tests
+web/                     Offline dashboard assets
 ```
-
-## Next handoff
-
-The next independent tasks are:
-
-- B1: implement the runnable backend using A1 protocol helpers.
-- B2: implement the workload generator and minimal dashboard after B1, integrating with A2's API.
-- A3: add automated health probing, control/reset endpoints, and expanded cleanup/deadline behavior after B1.
-
-Do not claim later gates, test passes, benchmark results, or screenshots until their artifacts exist in the repository.

@@ -69,12 +69,18 @@ async def test_service_lifespan_proxy_round_trip_and_live_api() -> None:
                 metrics = await client.get("/api/metrics")
                 current_config = await client.get("/api/config")
                 health = await client.get("/api/health")
+                dashboard = await client.get("/", follow_redirects=True)
+                dashboard_script = await client.get("/web/app.js")
 
             assert metrics.status_code == current_config.status_code == health.status_code == 200
             assert metrics.json()["totals"]["succeeded"] == 1
             assert current_config.json()["algorithm"] == "rr"
             assert health.json()["ready"] is True
             assert health.json()["backends"][0]["health"] == "healthy"
+            assert dashboard.status_code == 200
+            assert "NetBalance Live Dashboard" in dashboard.text
+            assert dashboard_script.status_code == 200
+            assert "javascript" in dashboard_script.headers["content-type"]
             assert app.state.proxy_ready is True
     finally:
         backend.close()
