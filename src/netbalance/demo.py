@@ -84,10 +84,12 @@ class DemoLauncher:
         config: AppConfig,
         profile: str = "uniform",
         custom_backend_overrides: Mapping[str, Mapping[str, float | int]] | None = None,
+        quiet_children: bool = False,
     ) -> None:
         self.config = config
         self.profile = profile
         self.backend_overrides = custom_backend_overrides or PROFILE_PRESETS.get(profile, {})
+        self.quiet_children = quiet_children
         self.processes: list[ManagedProcess] = []
 
     def verify_ports_available(self) -> None:
@@ -140,6 +142,8 @@ class DemoLauncher:
             logger.info("Starting backend %s on %s:%d (service=%sms, cap=%d)...", b.id, b.host, b.port, service_ms, capacity)
             proc = subprocess.Popen(
                 cmd,
+                stdout=subprocess.DEVNULL if self.quiet_children else None,
+                stderr=subprocess.DEVNULL if self.quiet_children else None,
                 text=True,
             )
             self.processes.append(ManagedProcess(name=f"backend-{b.id}", process=proc))
@@ -162,6 +166,8 @@ class DemoLauncher:
         logger.info("Starting NetBalance service (proxy :%d, HTTP :%d)...", self.config.listen_port, self.config.http_port)
         service_proc = subprocess.Popen(
             service_cmd,
+            stdout=subprocess.DEVNULL if self.quiet_children else None,
+            stderr=subprocess.DEVNULL if self.quiet_children else None,
             text=True,
         )
         self.processes.append(ManagedProcess(name="service", process=service_proc))

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import socket
+import subprocess
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -138,5 +139,6 @@ def test_launcher_does_not_leave_child_output_in_unread_pipes() -> None:
         launcher = DemoLauncher(config)
         launcher.start()
         assert len(popen.call_args_list) == 2
-        assert all("stdout" not in call.kwargs and "stderr" not in call.kwargs for call in popen.call_args_list)
+        assert all(call.kwargs["stdout"] is not subprocess.PIPE for call in popen.call_args_list)
+        assert all(call.kwargs["stderr"] is not subprocess.PIPE for call in popen.call_args_list)
         launcher.terminate_all()
