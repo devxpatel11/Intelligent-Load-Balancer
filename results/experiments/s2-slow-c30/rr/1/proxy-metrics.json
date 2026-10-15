@@ -1,0 +1,1866 @@
+{
+  "schema_version": 1,
+  "metrics_epoch": 1,
+  "config_revision": 2,
+  "algorithm": "rr",
+  "inflight": 0,
+  "totals": {
+    "received": 300,
+    "succeeded": 295,
+    "failed": 5,
+    "rejected": 0,
+    "protocol_errors": 0
+  },
+  "successful_proxy_latency_ms": {
+    "count": 295,
+    "mean": 826.293109491432,
+    "p50": 163.77569999895059,
+    "p95": 2831.671700005245
+  },
+  "backends": [
+    {
+      "id": "s1",
+      "host": "127.0.0.1",
+      "port": 9101,
+      "weight": 1,
+      "health": "healthy",
+      "active": 0,
+      "assignments": 100,
+      "successes": 100,
+      "failures": 0,
+      "consecutive_probe_successes": 13,
+      "consecutive_probe_failures": 0,
+      "last_transition_at": "2026-10-15T16:48:42.588311+00:00"
+    },
+    {
+      "id": "s2",
+      "host": "127.0.0.1",
+      "port": 9102,
+      "weight": 1,
+      "health": "healthy",
+      "active": 0,
+      "assignments": 100,
+      "successes": 95,
+      "failures": 5,
+      "consecutive_probe_successes": 13,
+      "consecutive_probe_failures": 0,
+      "last_transition_at": "2026-10-15T16:48:42.588311+00:00"
+    },
+    {
+      "id": "s3",
+      "host": "127.0.0.1",
+      "port": 9103,
+      "weight": 1,
+      "health": "healthy",
+      "active": 0,
+      "assignments": 100,
+      "successes": 100,
+      "failures": 0,
+      "consecutive_probe_successes": 13,
+      "consecutive_probe_failures": 0,
+      "last_transition_at": "2026-10-15T16:48:42.588311+00:00"
+    }
+  ],
+  "events": [
+    {
+      "timestamp": "2026-10-15T16:48:48.871607+00:00",
+      "request_id": "req-000212",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 100.78820000489941
+    },
+    {
+      "timestamp": "2026-10-15T16:48:48.875125+00:00",
+      "request_id": "req-000215",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:48.886238+00:00",
+      "request_id": "req-000213",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 88.54589999828022
+    },
+    {
+      "timestamp": "2026-10-15T16:48:48.889274+00:00",
+      "request_id": "req-000216",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:48.932796+00:00",
+      "request_id": "req-000210",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 167.26829999970505
+    },
+    {
+      "timestamp": "2026-10-15T16:48:48.932796+00:00",
+      "request_id": "req-000215",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 57.27020000631455
+    },
+    {
+      "timestamp": "2026-10-15T16:48:48.935816+00:00",
+      "request_id": "req-000217",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:48.936814+00:00",
+      "request_id": "req-000218",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.044647+00:00",
+      "request_id": "req-000218",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 108.44119999819668
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.044647+00:00",
+      "request_id": "req-000216",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 156.10770000057528
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.046649+00:00",
+      "request_id": "req-000219",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.048652+00:00",
+      "request_id": "req-000220",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.082648+00:00",
+      "request_id": "req-000133",
+      "action": "error",
+      "backend_id": "s2",
+      "outcome": "failed",
+      "error_code": "BACKEND_TIMEOUT",
+      "latency_ms": 3014.821100005065
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.084655+00:00",
+      "request_id": "req-000221",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.148389+00:00",
+      "request_id": "req-000221",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 64.26070000452455
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.151393+00:00",
+      "request_id": "req-000222",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.209587+00:00",
+      "request_id": "req-000219",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 163.32259999762755
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.212704+00:00",
+      "request_id": "req-000223",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.214723+00:00",
+      "request_id": "req-000139",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2971.643299999414
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.216806+00:00",
+      "request_id": "req-000224",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.286987+00:00",
+      "request_id": "req-000224",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 70.42709999950603
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.291165+00:00",
+      "request_id": "req-000225",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.292186+00:00",
+      "request_id": "req-000222",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 141.50639999570558
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.294708+00:00",
+      "request_id": "req-000226",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.317205+00:00",
+      "request_id": "req-000142",
+      "action": "error",
+      "backend_id": "s2",
+      "outcome": "failed",
+      "error_code": "BACKEND_TIMEOUT",
+      "latency_ms": 3010.6597999983933
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.322199+00:00",
+      "request_id": "req-000227",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.348938+00:00",
+      "request_id": "req-000225",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 58.46409999503521
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.353313+00:00",
+      "request_id": "req-000228",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.411659+00:00",
+      "request_id": "req-000151",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2621.260200001416
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.413670+00:00",
+      "request_id": "req-000229",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.415660+00:00",
+      "request_id": "req-000145",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2954.3207000024267
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.417657+00:00",
+      "request_id": "req-000230",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.419691+00:00",
+      "request_id": "req-000227",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 97.73180000047432
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.422159+00:00",
+      "request_id": "req-000231",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.476614+00:00",
+      "request_id": "req-000228",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 123.82549999892944
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.476614+00:00",
+      "request_id": "req-000231",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 55.65710000519175
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.479862+00:00",
+      "request_id": "req-000232",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.480855+00:00",
+      "request_id": "req-000233",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.482853+00:00",
+      "request_id": "req-000230",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 65.06209999497514
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.484851+00:00",
+      "request_id": "req-000234",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.612405+00:00",
+      "request_id": "req-000157",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2620.1228000063566
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.616400+00:00",
+      "request_id": "req-000235",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.618811+00:00",
+      "request_id": "req-000148",
+      "action": "error",
+      "backend_id": "s2",
+      "outcome": "failed",
+      "error_code": "BACKEND_TIMEOUT",
+      "latency_ms": 2986.4130999994813
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.621835+00:00",
+      "request_id": "req-000236",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.623223+00:00",
+      "request_id": "req-000233",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 143.7593999944511
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.624689+00:00",
+      "request_id": "req-000237",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.628982+00:00",
+      "request_id": "req-000234",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 144.07469999423483
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.630978+00:00",
+      "request_id": "req-000238",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.790022+00:00",
+      "request_id": "req-000236",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 168.78110000106972
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.790022+00:00",
+      "request_id": "req-000237",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 165.1832000061404
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.792148+00:00",
+      "request_id": "req-000239",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.793517+00:00",
+      "request_id": "req-000240",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.816732+00:00",
+      "request_id": "req-000154",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2929.4965000008233
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.821870+00:00",
+      "request_id": "req-000241",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.893440+00:00",
+      "request_id": "req-000240",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 101.11889999825507
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.895822+00:00",
+      "request_id": "req-000242",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.897974+00:00",
+      "request_id": "req-000239",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 106.61649999383371
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.900502+00:00",
+      "request_id": "req-000243",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.956305+00:00",
+      "request_id": "req-000242",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 60.36920000042301
+    },
+    {
+      "timestamp": "2026-10-15T16:48:49.959392+00:00",
+      "request_id": "req-000244",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.017568+00:00",
+      "request_id": "req-000163",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2821.1957000021357
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.021569+00:00",
+      "request_id": "req-000166",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2656.994600001781
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.022567+00:00",
+      "request_id": "req-000245",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.023567+00:00",
+      "request_id": "req-000246",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.025575+00:00",
+      "request_id": "req-000169",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2623.2115999955568
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.026571+00:00",
+      "request_id": "req-000160",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2951.963200001046
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.028925+00:00",
+      "request_id": "req-000247",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.029941+00:00",
+      "request_id": "req-000248",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.063055+00:00",
+      "request_id": "req-000243",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 162.65949999797158
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.065048+00:00",
+      "request_id": "req-000249",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.140921+00:00",
+      "request_id": "req-000245",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 119.49209999875166
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.140921+00:00",
+      "request_id": "req-000246",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 118.04239999764832
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.142165+00:00",
+      "request_id": "req-000248",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 113.55599999660626
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.147676+00:00",
+      "request_id": "req-000250",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.148695+00:00",
+      "request_id": "req-000251",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.148695+00:00",
+      "request_id": "req-000252",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.220847+00:00",
+      "request_id": "req-000252",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 72.23820000217529
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.221839+00:00",
+      "request_id": "req-000249",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 156.82289999676868
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.224017+00:00",
+      "request_id": "req-000251",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 78.76260000193724
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.225034+00:00",
+      "request_id": "req-000253",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.226032+00:00",
+      "request_id": "req-000254",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.228033+00:00",
+      "request_id": "req-000255",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.229033+00:00",
+      "request_id": "req-000178",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2563.581599999452
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.229033+00:00",
+      "request_id": "req-000181",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2475.408199999947
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.232534+00:00",
+      "request_id": "req-000256",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.233532+00:00",
+      "request_id": "req-000257",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.344807+00:00",
+      "request_id": "req-000255",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 117.90689999907045
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.348303+00:00",
+      "request_id": "req-000258",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.390117+00:00",
+      "request_id": "req-000254",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 164.44170000613667
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.392226+00:00",
+      "request_id": "req-000257",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 160.00419999909354
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.394117+00:00",
+      "request_id": "req-000259",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.395118+00:00",
+      "request_id": "req-000260",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.454861+00:00",
+      "request_id": "req-000175",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2853.3282999997027
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.454861+00:00",
+      "request_id": "req-000172",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2902.388199996494
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.455865+00:00",
+      "request_id": "req-000184",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2650.62079999916
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.457312+00:00",
+      "request_id": "req-000258",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 109.7613999954774
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.460202+00:00",
+      "request_id": "req-000261",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.461260+00:00",
+      "request_id": "req-000262",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.462577+00:00",
+      "request_id": "req-000263",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.463598+00:00",
+      "request_id": "req-000264",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.500095+00:00",
+      "request_id": "req-000260",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 104.3229999995674
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.503305+00:00",
+      "request_id": "req-000265",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.531193+00:00",
+      "request_id": "req-000264",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 66.78239999746438
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.533114+00:00",
+      "request_id": "req-000266",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.576633+00:00",
+      "request_id": "req-000263",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 116.55969999992521
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.577648+00:00",
+      "request_id": "req-000261",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 119.38329999975394
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.579688+00:00",
+      "request_id": "req-000267",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.580652+00:00",
+      "request_id": "req-000268",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.639580+00:00",
+      "request_id": "req-000266",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 106.66639999544714
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.642792+00:00",
+      "request_id": "req-000269",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.655403+00:00",
+      "request_id": "req-000187",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2744.28440000338
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.656423+00:00",
+      "request_id": "req-000196",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2431.989100005012
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.656423+00:00",
+      "request_id": "req-000190",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2652.349999996659
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.657420+00:00",
+      "request_id": "req-000193",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2497.6984999957494
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.658423+00:00",
+      "request_id": "req-000270",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.660432+00:00",
+      "request_id": "req-000271",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.662209+00:00",
+      "request_id": "req-000272",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.663226+00:00",
+      "request_id": "req-000273",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.665227+00:00",
+      "request_id": "req-000267",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 86.69269999518292
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.668331+00:00",
+      "request_id": "req-000274",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.707244+00:00",
+      "request_id": "req-000270",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 49.55379999591969
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.709236+00:00",
+      "request_id": "req-000275",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.779288+00:00",
+      "request_id": "req-000273",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 115.78880000161007
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.782294+00:00",
+      "request_id": "req-000276",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.809680+00:00",
+      "request_id": "req-000269",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 167.6817999978084
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.810556+00:00",
+      "request_id": "req-000272",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 149.613200002932
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.813563+00:00",
+      "request_id": "req-000277",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.813563+00:00",
+      "request_id": "req-000278",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.856594+00:00",
+      "request_id": "req-000275",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 146.68389999860665
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.856594+00:00",
+      "request_id": "req-000199",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2583.3634000009624
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.857598+00:00",
+      "request_id": "req-000202",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2525.545399999828
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.857598+00:00",
+      "request_id": "req-000205",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2354.4408999950974
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.859769+00:00",
+      "request_id": "req-000279",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.861782+00:00",
+      "request_id": "req-000280",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.862786+00:00",
+      "request_id": "req-000281",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.863875+00:00",
+      "request_id": "req-000282",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.903005+00:00",
+      "request_id": "req-000276",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 121.35919999855105
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.905895+00:00",
+      "request_id": "req-000283",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.919122+00:00",
+      "request_id": "req-000278",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 106.81859999749577
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.921011+00:00",
+      "request_id": "req-000284",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.967180+00:00",
+      "request_id": "req-000279",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 109.3133999966085
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.968181+00:00",
+      "request_id": "req-000282",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 105.10219999559922
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.971504+00:00",
+      "request_id": "req-000285",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.972501+00:00",
+      "request_id": "req-000286",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.983133+00:00",
+      "request_id": "req-000284",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 61.55430000217166
+    },
+    {
+      "timestamp": "2026-10-15T16:48:50.984215+00:00",
+      "request_id": "req-000287",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.012660+00:00",
+      "request_id": "req-000281",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 152.5099999998929
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.015938+00:00",
+      "request_id": "req-000288",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.043605+00:00",
+      "request_id": "req-000287",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 60.27859999448992
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.047097+00:00",
+      "request_id": "req-000289",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.075634+00:00",
+      "request_id": "req-000285",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 105.70970000117086
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.077732+00:00",
+      "request_id": "req-000290",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.123917+00:00",
+      "request_id": "req-000288",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 108.86600000230828
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.127182+00:00",
+      "request_id": "req-000291",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.233163+00:00",
+      "request_id": "req-000290",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 155.18100000190316
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.236203+00:00",
+      "request_id": "req-000292",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.262913+00:00",
+      "request_id": "req-000208",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2647.7144999953452
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.263934+00:00",
+      "request_id": "req-000214",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2464.087100001052
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.263934+00:00",
+      "request_id": "req-000217",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2329.8614000013913
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.269542+00:00",
+      "request_id": "req-000293",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.270543+00:00",
+      "request_id": "req-000294",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.271541+00:00",
+      "request_id": "req-000295",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.272540+00:00",
+      "request_id": "req-000291",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 146.14799999981187
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.275103+00:00",
+      "request_id": "req-000296",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.326141+00:00",
+      "request_id": "req-000294",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 58.0162999976892
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.329510+00:00",
+      "request_id": "req-000297",
+      "action": "assign",
+      "backend_id": "s1",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.387559+00:00",
+      "request_id": "req-000296",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 112.85140000109095
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.390555+00:00",
+      "request_id": "req-000298",
+      "action": "assign",
+      "backend_id": "s2",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.417415+00:00",
+      "request_id": "req-000293",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 151.50439999706578
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.420427+00:00",
+      "request_id": "req-000299",
+      "action": "assign",
+      "backend_id": "s3",
+      "outcome": "inflight",
+      "error_code": null,
+      "latency_ms": null
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.467313+00:00",
+      "request_id": "req-000211",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2699.595899997803
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.467313+00:00",
+      "request_id": "req-000223",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2254.9997999958578
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.480218+00:00",
+      "request_id": "req-000297",
+      "action": "success",
+      "backend_id": "s1",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 150.27980000013486
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.574418+00:00",
+      "request_id": "req-000299",
+      "action": "success",
+      "backend_id": "s3",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 153.6478000052739
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.667935+00:00",
+      "request_id": "req-000226",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2373.6798000027193
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.668940+00:00",
+      "request_id": "req-000229",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2255.43689999904
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.873791+00:00",
+      "request_id": "req-000220",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2825.5643000011332
+    },
+    {
+      "timestamp": "2026-10-15T16:48:51.874810+00:00",
+      "request_id": "req-000232",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2395.7739000034053
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.090370+00:00",
+      "request_id": "req-000241",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2268.928899997263
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.091377+00:00",
+      "request_id": "req-000244",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2132.3912000007113
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.275285+00:00",
+      "request_id": "req-000238",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2644.740699994145
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.276286+00:00",
+      "request_id": "req-000235",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2660.026300000027
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.277281+00:00",
+      "request_id": "req-000250",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2133.1588000030024
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.696894+00:00",
+      "request_id": "req-000259",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2303.5052999985055
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.696894+00:00",
+      "request_id": "req-000247",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2669.279900001129
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.884459+00:00",
+      "request_id": "req-000256",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2653.1520999997156
+    },
+    {
+      "timestamp": "2026-10-15T16:48:52.885460+00:00",
+      "request_id": "req-000253",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2661.247000003641
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.088231+00:00",
+      "request_id": "req-000268",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2507.2967000014614
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.088231+00:00",
+      "request_id": "req-000265",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2585.7242999991286
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.291091+00:00",
+      "request_id": "req-000271",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2630.966600001557
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.292089+00:00",
+      "request_id": "req-000277",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2479.760600006557
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.292089+00:00",
+      "request_id": "req-000262",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2833.526800000982
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.496133+00:00",
+      "request_id": "req-000280",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2637.0017000008374
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.499125+00:00",
+      "request_id": "req-000286",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2527.647099996102
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.698009+00:00",
+      "request_id": "req-000274",
+      "action": "error",
+      "backend_id": "s2",
+      "outcome": "failed",
+      "error_code": "BACKEND_TIMEOUT",
+      "latency_ms": 3029.6616000050562
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.705012+00:00",
+      "request_id": "req-000283",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2799.087300001702
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.904183+00:00",
+      "request_id": "req-000289",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2857.365800002299
+    },
+    {
+      "timestamp": "2026-10-15T16:48:53.905175+00:00",
+      "request_id": "req-000292",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2670.08010000427
+    },
+    {
+      "timestamp": "2026-10-15T16:48:54.102441+00:00",
+      "request_id": "req-000295",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2832.0378999997047
+    },
+    {
+      "timestamp": "2026-10-15T16:48:54.320837+00:00",
+      "request_id": "req-000298",
+      "action": "success",
+      "backend_id": "s2",
+      "outcome": "succeeded",
+      "error_code": null,
+      "latency_ms": 2930.995899994741
+    }
+  ]
+}

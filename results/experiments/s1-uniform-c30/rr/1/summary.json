@@ -1,0 +1,18 @@
+{
+  "total_attempts": 300,
+  "successful_attempts": 300,
+  "failed_attempts": 0,
+  "duration_s": 2.875,
+  "throughput_rps": 104.34782608695652,
+  "mean_latency_ms": 258.97924066671595,
+  "p50_latency_ms": 258.02520000434015,
+  "p95_latency_ms": 382.5372999999672,
+  "p99_latency_ms": 423.9037000006647,
+  "metrics_epoch": 1,
+  "assignments_by_backend": {
+    "s1": 100,
+    "s2": 100,
+    "s3": 100
+  },
+  "failures_by_error": {}
+}

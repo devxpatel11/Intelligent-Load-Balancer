@@ -1,0 +1,776 @@
+{
+  "schema_version": 1,
+  "git_commit": "5302023a3c6b65b71c9949a09fb418dd1560623e",
+  "run_count": 36,
+  "elapsed_s": 519.25,
+  "runs": [
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "rr",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 33.4690000000046,
+      "throughput_rps": 8.963518479786034,
+      "mean_latency_ms": 111.05482566679711,
+      "p50_latency_ms": 109.06890000478597,
+      "p95_latency_ms": 171.3499999968917,
+      "p99_latency_ms": 173.93209999863757,
+      "metrics_epoch": 1,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "lc",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 33.015999999995984,
+      "throughput_rps": 9.08650351344913,
+      "mean_latency_ms": 109.48904899991855,
+      "p50_latency_ms": 108.72680000466062,
+      "p95_latency_ms": 170.80559999885736,
+      "p99_latency_ms": 173.80219999904511,
+      "metrics_epoch": 2,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "swrr",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 33.46800000000076,
+      "throughput_rps": 8.963786303334325,
+      "mean_latency_ms": 111.01619100001699,
+      "p50_latency_ms": 109.07399999996414,
+      "p95_latency_ms": 172.2790999992867,
+      "p99_latency_ms": 173.58280000189552,
+      "metrics_epoch": 3,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "lc",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 34.51499999999942,
+      "throughput_rps": 8.691873098652906,
+      "mean_latency_ms": 114.44611333339708,
+      "p50_latency_ms": 109.36309999669902,
+      "p95_latency_ms": 172.203800000716,
+      "p99_latency_ms": 174.99810000299476,
+      "metrics_epoch": 4,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "swrr",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 34.51600000000326,
+      "throughput_rps": 8.691621277088066,
+      "mean_latency_ms": 114.42105666642117,
+      "p50_latency_ms": 109.58840000239434,
+      "p95_latency_ms": 171.85419999441365,
+      "p99_latency_ms": 177.5363000051584,
+      "metrics_epoch": 5,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "rr",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 34.78199999999924,
+      "throughput_rps": 8.62515094014164,
+      "mean_latency_ms": 115.30936733302951,
+      "p50_latency_ms": 109.2382999995607,
+      "p95_latency_ms": 172.49140000058105,
+      "p99_latency_ms": 186.75829999847338,
+      "metrics_epoch": 6,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "swrr",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 34.38999999999942,
+      "throughput_rps": 8.723466123873367,
+      "mean_latency_ms": 114.03722333321639,
+      "p50_latency_ms": 109.00679999758722,
+      "p95_latency_ms": 171.0910000037984,
+      "p99_latency_ms": 175.92339999828255,
+      "metrics_epoch": 7,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "rr",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 34.38999999999942,
+      "throughput_rps": 8.723466123873367,
+      "mean_latency_ms": 113.99977699998999,
+      "p50_latency_ms": 109.02870000427356,
+      "p95_latency_ms": 171.6967000029399,
+      "p99_latency_ms": 175.3413999977056,
+      "metrics_epoch": 8,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c1",
+      "policy": "lc",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 34.2190000000046,
+      "throughput_rps": 8.767059236095728,
+      "mean_latency_ms": 113.45244899979055,
+      "p50_latency_ms": 109.49190000246745,
+      "p95_latency_ms": 171.63590000564,
+      "p99_latency_ms": 174.66089999652468,
+      "metrics_epoch": 9,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "rr",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.875,
+      "throughput_rps": 104.34782608695652,
+      "mean_latency_ms": 258.97924066671595,
+      "p50_latency_ms": 258.02520000434015,
+      "p95_latency_ms": 382.5372999999672,
+      "p99_latency_ms": 423.9037000006647,
+      "metrics_epoch": 1,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "lc",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.8280000000013388,
+      "throughput_rps": 106.08203677505587,
+      "mean_latency_ms": 262.04048799988715,
+      "p50_latency_ms": 262.1590999988257,
+      "p95_latency_ms": 364.6962000057101,
+      "p99_latency_ms": 385.53610000235494,
+      "metrics_epoch": 2,
+      "assignments_by_backend": {
+        "s1": 98,
+        "s2": 101,
+        "s3": 101
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "swrr",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.8909999999959837,
+      "throughput_rps": 103.7703216881414,
+      "mean_latency_ms": 260.44053066677105,
+      "p50_latency_ms": 261.7912999994587,
+      "p95_latency_ms": 379.49939999816706,
+      "p99_latency_ms": 422.4785000042175,
+      "metrics_epoch": 3,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "lc",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.7660000000032596,
+      "throughput_rps": 108.45986984802836,
+      "mean_latency_ms": 256.45841700017627,
+      "p50_latency_ms": 261.1648999954923,
+      "p95_latency_ms": 357.2638000041479,
+      "p99_latency_ms": 394.0112999989651,
+      "metrics_epoch": 4,
+      "assignments_by_backend": {
+        "s1": 102,
+        "s2": 102,
+        "s3": 96
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "swrr",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.8909999999959837,
+      "throughput_rps": 103.7703216881414,
+      "mean_latency_ms": 260.74371700000484,
+      "p50_latency_ms": 253.95879999996396,
+      "p95_latency_ms": 417.9539000033401,
+      "p99_latency_ms": 459.65720000094734,
+      "metrics_epoch": 5,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "rr",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.875,
+      "throughput_rps": 104.34782608695652,
+      "mean_latency_ms": 258.7049130001348,
+      "p50_latency_ms": 255.11150000238558,
+      "p95_latency_ms": 419.3325000014738,
+      "p99_latency_ms": 477.38440000102855,
+      "metrics_epoch": 6,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "swrr",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.764999999999418,
+      "throughput_rps": 108.49909584089083,
+      "mean_latency_ms": 261.3300556665975,
+      "p50_latency_ms": 263.1760000003851,
+      "p95_latency_ms": 371.2225000053877,
+      "p99_latency_ms": 389.5589999956428,
+      "metrics_epoch": 7,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "rr",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.8280000000013388,
+      "throughput_rps": 106.08203677505587,
+      "mean_latency_ms": 259.6630533329638,
+      "p50_latency_ms": 255.1028000016231,
+      "p95_latency_ms": 392.6508000004105,
+      "p99_latency_ms": 441.46649999311194,
+      "metrics_epoch": 8,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s1-uniform-c30",
+      "policy": "lc",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 2.812999999994645,
+      "throughput_rps": 106.64770707450093,
+      "mean_latency_ms": 262.3354999999477,
+      "p50_latency_ms": 261.314700001094,
+      "p95_latency_ms": 361.22169999725884,
+      "p99_latency_ms": 375.97529999766266,
+      "metrics_epoch": 9,
+      "assignments_by_backend": {
+        "s1": 98,
+        "s2": 100,
+        "s3": 102
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "rr",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 295,
+      "failed_attempts": 5,
+      "duration_s": 10.26600000000326,
+      "throughput_rps": 28.73563218389892,
+      "mean_latency_ms": 828.7047640678732,
+      "p50_latency_ms": 166.16849999991246,
+      "p95_latency_ms": 2832.8935999961686,
+      "p99_latency_ms": 2955.5729999992764,
+      "metrics_epoch": 1,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 95,
+        "s3": 100
+      },
+      "failures_by_error": {
+        "BACKEND_TIMEOUT": 5
+      }
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "lc",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 4.2960000000020955,
+      "throughput_rps": 69.83240223460281,
+      "mean_latency_ms": 352.6842336667323,
+      "p50_latency_ms": 266.77570000174455,
+      "p95_latency_ms": 1026.5560000043479,
+      "p99_latency_ms": 1243.0039000028046,
+      "metrics_epoch": 2,
+      "assignments_by_backend": {
+        "s1": 138,
+        "s2": 38,
+        "s3": 124
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "swrr",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 294,
+      "failed_attempts": 6,
+      "duration_s": 10.203000000001339,
+      "throughput_rps": 28.81505439576217,
+      "mean_latency_ms": 814.517445578333,
+      "p50_latency_ms": 169.95650000171736,
+      "p95_latency_ms": 2793.6810000028345,
+      "p99_latency_ms": 2967.659400004777,
+      "metrics_epoch": 3,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 94,
+        "s3": 100
+      },
+      "failures_by_error": {
+        "BACKEND_TIMEOUT": 6
+      }
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "lc",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 4.26600000000326,
+      "throughput_rps": 70.3234880449533,
+      "mean_latency_ms": 339.29030700007087,
+      "p50_latency_ms": 262.4417999977595,
+      "p95_latency_ms": 996.6153999994276,
+      "p99_latency_ms": 1209.4929999948363,
+      "metrics_epoch": 4,
+      "assignments_by_backend": {
+        "s1": 135,
+        "s2": 42,
+        "s3": 123
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "swrr",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 292,
+      "failed_attempts": 8,
+      "duration_s": 10.359000000004016,
+      "throughput_rps": 28.188049039471647,
+      "mean_latency_ms": 823.1214845893616,
+      "p50_latency_ms": 168.79250000056345,
+      "p95_latency_ms": 2898.6511999974027,
+      "p99_latency_ms": 2972.8623000046355,
+      "metrics_epoch": 5,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 92,
+        "s3": 100
+      },
+      "failures_by_error": {
+        "BACKEND_TIMEOUT": 8
+      }
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "rr",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 288,
+      "failed_attempts": 12,
+      "duration_s": 10.187999999994645,
+      "throughput_rps": 28.268551236763976,
+      "mean_latency_ms": 780.7950500003548,
+      "p50_latency_ms": 162.29740000562742,
+      "p95_latency_ms": 2837.287300004391,
+      "p99_latency_ms": 2959.0259000033257,
+      "metrics_epoch": 6,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 88,
+        "s3": 100
+      },
+      "failures_by_error": {
+        "BACKEND_TIMEOUT": 12
+      }
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "swrr",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 281,
+      "failed_attempts": 19,
+      "duration_s": 10.014999999999418,
+      "throughput_rps": 28.057913130306172,
+      "mean_latency_ms": 701.8734398576834,
+      "p50_latency_ms": 166.97159999603173,
+      "p95_latency_ms": 2848.9419000034104,
+      "p99_latency_ms": 2957.14350000344,
+      "metrics_epoch": 7,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 81,
+        "s3": 100
+      },
+      "failures_by_error": {
+        "BACKEND_TIMEOUT": 19
+      }
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "rr",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 279,
+      "failed_attempts": 21,
+      "duration_s": 10.046999999998661,
+      "throughput_rps": 27.769483427892624,
+      "mean_latency_ms": 689.1412863797184,
+      "p50_latency_ms": 166.6542999955709,
+      "p95_latency_ms": 2852.5039999949513,
+      "p99_latency_ms": 2946.2221000067075,
+      "metrics_epoch": 8,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 79,
+        "s3": 100
+      },
+      "failures_by_error": {
+        "BACKEND_TIMEOUT": 21
+      }
+    },
+    {
+      "scenario": "s2-slow-c30",
+      "policy": "lc",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 4.171999999998661,
+      "throughput_rps": 71.90795781402116,
+      "mean_latency_ms": 355.08979233335896,
+      "p50_latency_ms": 268.3342000018456,
+      "p95_latency_ms": 1018.4164000020246,
+      "p99_latency_ms": 1227.2800000064308,
+      "metrics_epoch": 9,
+      "assignments_by_backend": {
+        "s1": 132,
+        "s2": 40,
+        "s3": 128
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "rr",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 5.64100000000326,
+      "throughput_rps": 53.18205991842344,
+      "mean_latency_ms": 475.57927633337385,
+      "p50_latency_ms": 210.21319999999832,
+      "p95_latency_ms": 1352.6588999957312,
+      "p99_latency_ms": 1424.3786000006367,
+      "metrics_epoch": 1,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "lc",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 3.610000000000582,
+      "throughput_rps": 83.10249307477885,
+      "mean_latency_ms": 325.5296626665707,
+      "p50_latency_ms": 291.0912999941502,
+      "p95_latency_ms": 595.9010999940801,
+      "p99_latency_ms": 663.6617000040133,
+      "metrics_epoch": 2,
+      "assignments_by_backend": {
+        "s1": 144,
+        "s2": 93,
+        "s3": 63
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "swrr",
+      "repetition": 1,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 3.4680000000007567,
+      "throughput_rps": 86.50519031139982,
+      "mean_latency_ms": 314.6596280000085,
+      "p50_latency_ms": 315.6660999957239,
+      "p95_latency_ms": 495.28920000011567,
+      "p99_latency_ms": 525.8448000022327,
+      "metrics_epoch": 3,
+      "assignments_by_backend": {
+        "s1": 150,
+        "s2": 90,
+        "s3": 60
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "lc",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 3.4069999999992433,
+      "throughput_rps": 88.05400645731336,
+      "mean_latency_ms": 316.68237833357125,
+      "p50_latency_ms": 306.07400000008056,
+      "p95_latency_ms": 500.1494000025559,
+      "p99_latency_ms": 575.248900000588,
+      "metrics_epoch": 4,
+      "assignments_by_backend": {
+        "s1": 141,
+        "s2": 85,
+        "s3": 74
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "swrr",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 3.4840000000040163,
+      "throughput_rps": 86.10792192871818,
+      "mean_latency_ms": 310.8835683332533,
+      "p50_latency_ms": 288.8628000000608,
+      "p95_latency_ms": 530.739399997401,
+      "p99_latency_ms": 623.2760000057169,
+      "metrics_epoch": 5,
+      "assignments_by_backend": {
+        "s1": 150,
+        "s2": 90,
+        "s3": 60
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "rr",
+      "repetition": 2,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 5.187999999994645,
+      "throughput_rps": 57.82575173483224,
+      "mean_latency_ms": 450.0732486666675,
+      "p50_latency_ms": 265.71770000009565,
+      "p95_latency_ms": 1272.0098000063444,
+      "p99_latency_ms": 1323.485000000801,
+      "metrics_epoch": 6,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "swrr",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 3.25,
+      "throughput_rps": 92.3076923076923,
+      "mean_latency_ms": 303.24644866673526,
+      "p50_latency_ms": 311.5835999997216,
+      "p95_latency_ms": 435.1147000052151,
+      "p99_latency_ms": 466.5323000008357,
+      "metrics_epoch": 7,
+      "assignments_by_backend": {
+        "s1": 150,
+        "s2": 90,
+        "s3": 60
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "rr",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 5.328000000001339,
+      "throughput_rps": 56.30630630629216,
+      "mean_latency_ms": 455.5616446668864,
+      "p50_latency_ms": 220.36660000594566,
+      "p95_latency_ms": 1309.9056999999448,
+      "p99_latency_ms": 1404.1288000007626,
+      "metrics_epoch": 8,
+      "assignments_by_backend": {
+        "s1": 100,
+        "s2": 100,
+        "s3": 100
+      },
+      "failures_by_error": {}
+    },
+    {
+      "scenario": "s3-capacity-c30",
+      "policy": "lc",
+      "repetition": 3,
+      "total_attempts": 300,
+      "successful_attempts": 300,
+      "failed_attempts": 0,
+      "duration_s": 3.438000000001921,
+      "throughput_rps": 87.2600349039652,
+      "mean_latency_ms": 306.8657016669992,
+      "p50_latency_ms": 269.8132000004989,
+      "p95_latency_ms": 589.9977000008221,
+      "p99_latency_ms": 655.2928000019165,
+      "metrics_epoch": 9,
+      "assignments_by_backend": {
+        "s1": 146,
+        "s2": 87,
+        "s3": 67
+      },
+      "failures_by_error": {}
+    }
+  ]
+}

@@ -1,0 +1,198 @@
+[
+  {
+    "scenario": "s1-uniform-c1",
+    "policy": "lc",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 8.767059236095728,
+    "median_p95_latency_ms": 171.63590000564,
+    "assignments_by_backend": {
+      "s1": 300,
+      "s2": 300,
+      "s3": 300
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s1-uniform-c1",
+    "policy": "rr",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 8.723466123873367,
+    "median_p95_latency_ms": 171.6967000029399,
+    "assignments_by_backend": {
+      "s1": 300,
+      "s2": 300,
+      "s3": 300
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s1-uniform-c1",
+    "policy": "swrr",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 8.723466123873367,
+    "median_p95_latency_ms": 171.85419999441365,
+    "assignments_by_backend": {
+      "s1": 300,
+      "s2": 300,
+      "s3": 300
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s1-uniform-c30",
+    "policy": "lc",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 106.64770707450093,
+    "median_p95_latency_ms": 361.22169999725884,
+    "assignments_by_backend": {
+      "s1": 298,
+      "s2": 303,
+      "s3": 299
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s1-uniform-c30",
+    "policy": "rr",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 104.34782608695652,
+    "median_p95_latency_ms": 392.6508000004105,
+    "assignments_by_backend": {
+      "s1": 300,
+      "s2": 300,
+      "s3": 300
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s1-uniform-c30",
+    "policy": "swrr",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 103.7703216881414,
+    "median_p95_latency_ms": 379.49939999816706,
+    "assignments_by_backend": {
+      "s1": 300,
+      "s2": 300,
+      "s3": 300
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s2-slow-c30",
+    "policy": "lc",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 70.3234880449533,
+    "median_p95_latency_ms": 1018.4164000020246,
+    "assignments_by_backend": {
+      "s1": 405,
+      "s2": 120,
+      "s3": 375
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s2-slow-c30",
+    "policy": "rr",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 862,
+    "failed_attempts": 38,
+    "median_throughput_rps": 28.268551236763976,
+    "median_p95_latency_ms": 2837.287300004391,
+    "assignments_by_backend": {
+      "s1": 300,
+      "s2": 262,
+      "s3": 300
+    },
+    "failures_by_error": {
+      "BACKEND_TIMEOUT": 38
+    }
+  },
+  {
+    "scenario": "s2-slow-c30",
+    "policy": "swrr",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 867,
+    "failed_attempts": 33,
+    "median_throughput_rps": 28.188049039471647,
+    "median_p95_latency_ms": 2848.9419000034104,
+    "assignments_by_backend": {
+      "s1": 300,
+      "s2": 267,
+      "s3": 300
+    },
+    "failures_by_error": {
+      "BACKEND_TIMEOUT": 33
+    }
+  },
+  {
+    "scenario": "s3-capacity-c30",
+    "policy": "lc",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 87.2600349039652,
+    "median_p95_latency_ms": 589.9977000008221,
+    "assignments_by_backend": {
+      "s1": 431,
+      "s2": 265,
+      "s3": 204
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s3-capacity-c30",
+    "policy": "rr",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 56.30630630629216,
+    "median_p95_latency_ms": 1309.9056999999448,
+    "assignments_by_backend": {
+      "s1": 300,
+      "s2": 300,
+      "s3": 300
+    },
+    "failures_by_error": {}
+  },
+  {
+    "scenario": "s3-capacity-c30",
+    "policy": "swrr",
+    "repetitions": 3,
+    "total_attempts": 900,
+    "successful_attempts": 900,
+    "failed_attempts": 0,
+    "median_throughput_rps": 86.50519031139982,
+    "median_p95_latency_ms": 495.28920000011567,
+    "assignments_by_backend": {
+      "s1": 450,
+      "s2": 270,
+      "s3": 180
+    },
+    "failures_by_error": {}
+  }
+]

@@ -4,9 +4,9 @@ NetBalance is an educational application-aware TCP load balancer built with Pyth
 
 ## Verified status
 
-A1-A4 and B1-B4 are implemented and integrated. The current suite has 87 passing tests, including real loopback backend/proxy traffic, 30-request RR distribution, outage/recovery, all-down, timeout, overload, protocol, accounting, cleanup, dashboard/API, benchmark metadata, and analyzer reconciliation paths.
+A1-A5 and B1-B5 are implemented and integrated. The current suite has 90 passing tests, including real loopback backend/proxy traffic, 30-request RR distribution, outage/recovery, all-down, timeout, overload, protocol, accounting, cleanup, dashboard/API, benchmark metadata, analyzer reconciliation, and experiment aggregation paths.
 
-Committed B3 evidence demonstrates RR `10:10:10`, SWRR `15:9:6` at weights `5:3:2`, and bounded failures followed by backend recovery. B4 includes a traceable 30/30-success dry run. B5's repeated comparative experiment is intentionally not claimed yet.
+Committed B3 evidence demonstrates RR `10:10:10`, SWRR `15:9:6` at weights `5:3:2`, and bounded failures followed by backend recovery. B4 includes a traceable 30/30-success dry run. B5 adds 36 measured runs with raw/config/environment/trace/proxy evidence, aggregates, a comparison chart, and an evidence-backed report.
 
 ## Architecture and contracts
 
@@ -100,6 +100,8 @@ Integration tests use real loopback sockets, ephemeral ports, finite readiness/d
 
 - `results/demo_rr_30.csv`, `demo_swrr_30.csv`, `demo_outage_recovery.csv`, and `demo_outage_meta.json`: B3 live behavior evidence.
 - `results/dry_run.csv`, `dry_run.csv.meta.json`, and `dry_run_summary.json`: B4 benchmark/analyzer dry run.
+- `results/experiments/`: B5's 36-run controlled matrix, per-run evidence, aggregate table, and comparison chart.
+- `docs/report.md`: implementation description, measured results, interpretation, and limitations.
 - `docs/readme-notes/`: task commits, exact commands/results, acceptance checks, limitations, and next-task readiness.
 - `docs/experiments.md`: controlled B5 plan; planned claims remain separate from measured results.
 

@@ -1,0 +1,37 @@
+{
+  "listen_host": "127.0.0.1",
+  "listen_port": 9000,
+  "http_host": "127.0.0.1",
+  "http_port": 8000,
+  "algorithm": "lc",
+  "max_inflight": 200,
+  "client_frame_timeout_s": 2.0,
+  "backend_connect_timeout_s": 0.5,
+  "backend_timeout_s": 3.0,
+  "workload_timeout_s": 4.0,
+  "health_interval_s": 1.0,
+  "health_timeout_s": 0.5,
+  "fail_threshold": 2,
+  "recover_threshold": 2,
+  "backends": [
+    {
+      "id": "s1",
+      "host": "127.0.0.1",
+      "port": 9101,
+      "weight": 5
+    },
+    {
+      "id": "s2",
+      "host": "127.0.0.1",
+      "port": 9102,
+      "weight": 3
+    },
+    {
+      "id": "s3",
+      "host": "127.0.0.1",
+      "port": 9103,
+      "weight": 2
+    }
+  ],
+  "config_revision": 8
+}
