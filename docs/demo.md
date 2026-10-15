@@ -1,15 +1,27 @@
-# Demonstration plan
+# Demonstration and rehearsal
 
-The live demo is pending implementation. Do not treat these steps as verified commands until G5/G6 records successful execution.
+Run the bounded release rehearsal first:
 
-1. Start three independently configured backend processes.
-2. Start one service process with the proxy on TCP 9000 and dashboard/API on HTTP 8000.
-3. Show all backends becoming healthy.
-4. Run RR traffic and show cyclic assignment distribution.
-5. Use a slow-server profile with concurrent traffic and show LC active reservations.
-6. Use weights 5:3:2 and show SWRR configured distribution.
-7. Stop and restart s2; show detection, exclusion, finite detection-window failures, and recovery without replay.
-8. Show committed raw data/charts and the exact test evidence.
-9. Stop the demo and confirm only owned child processes terminate and ports are reusable.
+```text
+python scripts/rehearse_demo.py
+```
 
-The operator must say “request flow,” not packet capture, and “application failures,” not packet loss. If the dashboard fails, the API output, CLI, and saved charts remain the fallback demonstration.
+It starts the real three-backend topology and single-worker service, waits for health, loads the dashboard, sends 30 RR requests, requires 30/30 success with `10:10:10` assignments, stops only its child processes, and verifies that ports 8000, 9000, and 9101-9103 are reusable. B6 recorded a successful rehearsal.
+
+For the interactive presentation, run:
+
+```text
+python -m netbalance.demo --profile uniform
+```
+
+Then open `http://127.0.0.1:8000/` and present in this order:
+
+1. Show all three independently configured backends as healthy.
+2. Run 30 RR requests and show the equal assignment distribution.
+3. Switch to LC and explain that active reservations, not CPU or network utilization, drive selection.
+4. Apply weights `5:3:2`, switch to SWRR, and show the configured weighted distribution.
+5. Explain the committed outage/recovery evidence: detection, exclusion, bounded failures, recovery, and no replay.
+6. Open `results/experiments/comparison.png`, then trace one aggregate result back to its raw CSV, configuration, environment, trace, summary, and proxy metrics.
+7. Stop the launcher with `Ctrl+C` and state that it terminates only its owned children.
+
+Use “request flow,” not packet capture, and “application failures,” not packet loss. If the dashboard cannot be displayed, use `/api/health`, `/api/config`, `/api/metrics`, CLI output, and the committed chart as the fallback.

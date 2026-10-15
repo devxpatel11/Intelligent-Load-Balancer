@@ -1,8 +1,6 @@
 # Scope and limitations
 
-Current C0 contains contracts and scaffold only; no runtime feature is implemented.
-
-The planned completed project remains limited to:
+The completed A1-A5/B1-B5 implementation and B6 evidence audit remain limited to:
 
 - an educational application-aware TCP proxy on loopback, not IP routing or a production load balancer;
 - one request/response per connection, with no persistence, batching, transparent streaming, or replay;
