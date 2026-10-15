@@ -18,7 +18,7 @@ from pathlib import Path
 from netbalance.benchmark import get_git_commit
 from netbalance.config import load_config
 from netbalance.demo import DemoLauncher
-from netbalance.workload import AttemptResult, run_workload, write_csv
+from netbalance.workload import AttemptResult, WorkloadSummary, run_workload, write_csv
 
 
 POLICIES = ("rr", "lc", "swrr")
@@ -105,6 +105,32 @@ async def wait_for_healthy(http_port: int) -> None:
             await asyncio.sleep(0.1)
 
 
+async def wait_for_reconciled_metrics(
+    http_port: int,
+    epoch: int,
+    summary: WorkloadSummary,
+    timeout_s: float = 5.0,
+) -> dict[str, object]:
+    last: dict[str, object] = {}
+    try:
+        async with asyncio.timeout(timeout_s):
+            while True:
+                last = await asyncio.to_thread(http_json, http_port, "/api/metrics")
+                totals = last.get("totals")
+                if (
+                    last.get("metrics_epoch") == epoch
+                    and last.get("inflight") == 0
+                    and isinstance(totals, dict)
+                    and totals.get("received") == summary.total_attempts
+                    and totals.get("succeeded") == summary.successful_attempts
+                    and totals.get("failed") == summary.failed_attempts
+                ):
+                    return last
+                await asyncio.sleep(0.05)
+    except TimeoutError as exc:
+        raise RuntimeError(f"client/proxy reconciliation did not settle: {last}") from exc
+
+
 async def run_profile(
     profile: Profile,
     profile_index: int,
@@ -140,16 +166,8 @@ async def run_profile(
                     trace_path=run_trace, policy=policy, scenario=profile.scenario,
                     repetition=repetition,
                 )
-                proxy_metrics = await asyncio.to_thread(http_json, config.http_port, "/api/metrics")
+                proxy_metrics = await wait_for_reconciled_metrics(config.http_port, epoch, measured)
                 service_config = await asyncio.to_thread(http_json, config.http_port, "/api/config")
-                totals = proxy_metrics["totals"]
-                if (
-                    proxy_metrics["metrics_epoch"] != epoch
-                    or totals["received"] != measured.total_attempts
-                    or totals["succeeded"] != measured.successful_attempts
-                    or totals["failed"] != measured.failed_attempts
-                ):
-                    raise RuntimeError(f"client/proxy reconciliation failed for {profile.scenario}/{policy}/{repetition}")
                 summary = summarize(results, measured, epoch)
                 write_csv(results, run_dir / "raw.csv")
                 write_json(run_dir / "summary.json", summary)
