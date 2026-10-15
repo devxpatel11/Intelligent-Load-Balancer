@@ -40,7 +40,7 @@ class ProxyServer:
         if self._server is not None:
             raise RuntimeError("proxy is already running")
         self._server = await asyncio.start_server(
-            self._handle_client,
+            self._accept_client,
             host or self.config.listen_host,
             self.config.listen_port if port is None else port,
             limit=MAX_FRAME_BYTES,
@@ -49,14 +49,20 @@ class ProxyServer:
     async def stop(self) -> None:
         if self._server is None:
             return
-        self._server.close()
-        await self._server.wait_closed()
+        server = self._server
+        server.close()
         self._server = None
         current = asyncio.current_task()
         tasks = [task for task in self._client_tasks if task is not current]
         for task in tasks:
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
+        await server.wait_closed()
+
+    def _accept_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+        task = asyncio.create_task(self._handle_client(reader, writer))
+        self._client_tasks.add(task)
+        task.add_done_callback(self._client_tasks.discard)
 
     @property
     def address(self) -> tuple[str, int]:
@@ -66,9 +72,6 @@ class ProxyServer:
         return str(host), int(port)
 
     async def _handle_client(self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
-        task = asyncio.current_task()
-        if task is not None:
-            self._client_tasks.add(task)
         request_id: str | None = None
         reservation: Reservation | None = None
         admitted = False
@@ -130,8 +133,6 @@ class ProxyServer:
                 await writer.wait_closed()
             except (ConnectionError, OSError):
                 pass
-            if task is not None:
-                self._client_tasks.discard(task)
 
     async def _forward(self, request: dict[str, Any], reservation: Reservation) -> _Outcome:
         backend_writer: asyncio.StreamWriter | None = None
