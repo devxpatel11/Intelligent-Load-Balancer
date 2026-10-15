@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import csv
+import datetime as dt
 import json
+import platform
 import subprocess
 import sys
 import time
@@ -12,6 +14,13 @@ from pathlib import Path
 
 RESULTS_DIR = Path("results")
 RESULTS_DIR.mkdir(exist_ok=True)
+
+CONFIG_PATH = Path("configs/default.json")
+RUN_INPUTS = {
+    "rr": {"count": 30, "concurrency": 6, "policy": "rr", "scenario": "demo"},
+    "swrr": {"count": 30, "concurrency": 6, "policy": "swrr", "scenario": "demo", "weights": {"s1": 5, "s2": 3, "s3": 2}},
+    "outage_recovery": {"duration_s": 15, "concurrency": 6, "policy": "swrr", "stop_s2_at_s": 3, "restart_s2_at_s": 8},
+}
 
 # Subprocesses
 p_s1 = subprocess.Popen([sys.executable, "-m", "netbalance.backend", "--id", "s1", "--port", "9101", "--service-ms", "50", "--capacity", "4"])
@@ -51,16 +60,20 @@ def http_post(path: str, data: dict) -> dict:
 try:
     print("Waiting for backends to become healthy...")
     time.sleep(2.5)
+    ready = False
     for _ in range(20):
         try:
             h = http_get("/api/health")
             states = [b["health"] for b in h.get("backends", [])]
             if states == ["healthy", "healthy", "healthy"]:
                 print(f"All backends healthy: {states}")
+                ready = True
                 break
         except Exception:
             pass
         time.sleep(0.5)
+    if not ready:
+        raise RuntimeError("backends did not become healthy before the evidence deadline")
 
     # Step 1: 30 requests using round-robin
     print("\n--- Step 1: 30 requests using Round-Robin ---")
@@ -70,6 +83,9 @@ try:
         "--output", str(RESULTS_DIR / "demo_rr_30.csv"),
         "--policy", "rr", "--scenario", "demo"
     ], capture_output=True, text=True)
+    if res.returncode:
+        raise RuntimeError(f"RR workload failed: {res.stderr.strip()}")
+    rr_stdout = res.stdout.strip()
     print("RR workload exit code:", res.returncode)
     m_rr = http_get("/api/metrics")
     print(f"RR metrics: succeeded={m_rr['totals']['succeeded']}, assignments={[b['assignments'] for b in m_rr['backends']]}")
@@ -90,6 +106,9 @@ try:
         "--output", str(RESULTS_DIR / "demo_swrr_30.csv"),
         "--policy", "swrr", "--scenario", "demo"
     ], capture_output=True, text=True)
+    if res.returncode:
+        raise RuntimeError(f"SWRR workload failed: {res.stderr.strip()}")
+    swrr_stdout = res.stdout.strip()
     m_swrr = http_get("/api/metrics")
     print(f"SWRR metrics: succeeded={m_swrr['totals']['succeeded']}, assignments={[b['assignments'] for b in m_swrr['backends']]}")
 
@@ -118,22 +137,44 @@ try:
     p_s2 = subprocess.Popen([sys.executable, "-m", "netbalance.backend", "--id", "s2", "--port", "9102", "--service-ms", "50", "--capacity", "4"])
 
     stdout, stderr = p_wl.communicate()
+    if p_wl.returncode:
+        raise RuntimeError(f"Outage workload failed: {stderr.strip()}")
     t_end = time.time()
     print(f"[{t_end - t_start:.2f}s] Workload finished!")
     print(stdout)
 
     # Wait for s2 to recover to healthy
     print("Waiting for s2 recovery in proxy health registry...")
+    recovered = False
     for _ in range(10):
         m = http_get("/api/metrics")
         s2_rec = next(b for b in m["backends"] if b["id"] == "s2")
         if s2_rec["health"] == "healthy":
             print(f"s2 recovered! Current health: {s2_rec['health']}")
+            recovered = True
             break
         time.sleep(0.5)
+    if not recovered:
+        raise RuntimeError("s2 did not recover before the evidence deadline")
 
     m_final = http_get("/api/metrics")
     demo_meta = {
+        "schema_version": 1,
+        "generated_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "git_commit": subprocess.run(
+            ["git", "rev-parse", "HEAD"], check=True, capture_output=True, text=True
+        ).stdout.strip(),
+        "environment": {
+            "python": sys.version,
+            "platform": platform.platform(),
+        },
+        "config": json.loads(CONFIG_PATH.read_text(encoding="utf-8")),
+        "inputs": RUN_INPUTS,
+        "workload_output": {
+            "rr": rr_stdout,
+            "swrr": swrr_stdout,
+            "outage_recovery": stdout.strip(),
+        },
         "timestamps": {
             "t_start": t_start,
             "t_stop_s2": t_stop_s2,
