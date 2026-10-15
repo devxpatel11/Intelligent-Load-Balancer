@@ -4,9 +4,9 @@ NetBalance is an educational application-aware TCP load balancer built with Pyth
 
 ## Verified status
 
-A1-A5 and B1-B5 are implemented and integrated. The current suite has 90 passing tests, including real loopback backend/proxy traffic, 30-request RR distribution, outage/recovery, all-down, timeout, overload, protocol, accounting, cleanup, dashboard/API, benchmark metadata, analyzer reconciliation, and experiment aggregation paths.
+A1-A6 and B1-B6 are implemented and integrated. The current suite has 93 passing tests, including real loopback backend/proxy traffic, 30-request RR distribution, outage/recovery, all-down, timeout, overload, protocol, accounting, cleanup, dashboard/API, benchmark metadata, analyzer reconciliation, experiment aggregation, and evidence-audit paths.
 
-Committed B3 evidence demonstrates RR `10:10:10`, SWRR `15:9:6` at weights `5:3:2`, and bounded failures followed by backend recovery. B4 includes a traceable 30/30-success dry run. B5 adds 36 measured runs with raw/config/environment/trace/proxy evidence, aggregates, a comparison chart, and an evidence-backed report.
+Committed B3 evidence demonstrates RR `10:10:10`, SWRR `15:9:6` at weights `5:3:2`, and bounded failures followed by backend recovery. B4 includes a traceable 30/30-success dry run. B5 adds 36 measured runs with raw/config/environment/trace/proxy evidence, aggregates, a comparison chart, and an evidence-backed report. B6 independently audits all 10,800 measured attempts and provides a bounded live release rehearsal.
 
 ## Architecture and contracts
 
@@ -91,10 +91,14 @@ python scripts/verify.py
 python -m pytest tests/unit -q
 python -m pytest tests/integration -q
 python -m pytest -q
+python scripts/audit_evidence.py
+python scripts/rehearse_demo.py
 python -m pip check
 ```
 
 Integration tests use real loopback sockets, ephemeral ports, finite readiness/deadline polling, and cleanup limited to owned processes. Timing values are evidence, not deterministic pass thresholds.
+
+For a presentation-ready walkthrough and fallback procedure, follow [docs/demo.md](docs/demo.md).
 
 ## Evidence
 
@@ -104,6 +108,7 @@ Integration tests use real loopback sockets, ephemeral ports, finite readiness/d
 - `docs/report.md`: implementation description, measured results, interpretation, and limitations.
 - `docs/readme-notes/`: task commits, exact commands/results, acceptance checks, limitations, and next-task readiness.
 - `docs/experiments.md`: controlled B5 plan; planned claims remain separate from measured results.
+- `scripts/audit_evidence.py` and `scripts/rehearse_demo.py`: B6 evidence-integrity and live-release gates.
 
 ## Collaboration and repository policy
 
